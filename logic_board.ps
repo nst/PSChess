@@ -1,0 +1,431 @@
+% Nicolas Seriot
+% 2024-03-23
+% https://github.com/nst/PSChess
+% https://seriot.ch/projects/pschess.html
+
+% debugging
+
+/CALLSTACK 20 array def
+/CS_INDEX 0 def % callstack index
+
+/CS_PRINT {
+	5 dict begin
+	(\nCALLSTACK:) =
+	0 1 CS_INDEX {
+		/idx exch def
+		/line CALLSTACK idx get def
+		idx ==only ( ) =only line =
+	} for
+	end
+} def
+
+/CS_PUT {
+	1 dict begin
+	/s exch def
+	CALLSTACK CS_INDEX s put	
+	end
+	/CS_INDEX CS_INDEX 1 add def
+} def
+
+/CS_POP {		
+    CALLSTACK CS_INDEX null put
+    /CS_INDEX CS_INDEX 1 sub def
+} def
+
+%/su_ { errordict/stackunderflow } bind def 
+%errordict/stackunderflow { CS_PRINT su_ } put
+%
+%/tc_ { errordict/typecheck } bind def 
+%errordict/typecheck { CS_PRINT signalerror } put
+
+%errordict/undefined { CS_POP CS_PRINT signalerror } put
+%errordict/invalidrestore { CS_POP CS_PRINT signalerror } put
+%errordict/rangecheck { CS_POP CS_PRINT signalerror } put
+
+%<<
+%/break{ /hook /pause load store }
+%/cont{ /hook {} store }
+%/doprompt{
+%    (\nbreak>)print
+%    flush(%lineedit)(r)file
+%    cvx {exec}stopped pop }
+%/pause{ doprompt }
+%/hook{}
+%>> begin
+
+% ------------------------------------
+
+% CreateBoard() -> b
+/CreateBoard_b_ {
+(\
+rnbqkbnr\
+pppppppp\
+........\
+........\
+........\
+........\
+PPPPPPPP\
+RNBQKBNR\
+) _s_Dup_s_
+} def
+
+% end game
+%/CreateBoard_b_ {
+%(\
+%r.b.k..r\
+%pppp.ppp\
+%........\
+%..b.....\
+%Pn.p.q..\
+%........\
+%...KP..n\
+%RNBQ.BN.\
+%) _s_Dup_s_
+%} def
+
+% PrintDict(d)
+/_d_PrintDict {
+	/d exch def
+
+	d {
+		/v exch def
+		/k exch def
+		(    k:) =only k =only ( v: ) =only v ==
+	} forall
+
+} def
+
+% printBoard(board)
+/_board_PrintBoard {
+	(/_board_PrintBoard) CS_PUT
+
+	2 dict begin
+
+	/b exch def
+	
+	()=
+	b  0 8 getinterval =
+	b  8 8 getinterval =
+	b 16 8 getinterval =
+	b 24 8 getinterval =
+	b 32 8 getinterval =
+	b 40 8 getinterval =
+	b 48 8 getinterval =
+	b 56 8 getinterval =
+	()=
+	
+	end
+	
+	CS_POP
+} def
+
+% dup(s) -> s
+/_s_Dup_s_ {
+	(/_s_Dup_s_) CS_PUT
+	
+	dup length string cvs
+			
+	CS_POP		 
+} def
+
+% isValidCoordinate(c) -> b
+/_c_IsValidCoordinate_b_ {
+	(/_c_IsValidCoordinate_b_) CS_PUT
+
+	/cr exch def
+
+	/ret false def
+	
+	cr length 2 eq {
+	
+		/i cr _coord_Index_i_ def
+		
+		i _index_IsInBoardRange_b_ {
+			/ret true def
+		} if
+	
+	} if
+	
+	ret	
+	
+	CS_POP
+} def
+
+% col(index) -> a-h
+/_index_Col_a-h_ {
+	(/_index_Col_a-h_) CS_PUT
+
+	/c ( ) _s_Dup_s_ def
+	
+	1 dict begin
+
+	/i exch def
+
+	c 0 i 8 mod 97 add put
+	
+    end
+	
+	c
+	
+	CS_POP
+} def
+
+% row(index) -> 1-8
+/_index_Row_1-8_ {
+	(/_index_Row_1-8_-h_) CS_PUT
+
+	1 dict begin
+
+	/i exch def
+
+	8 i 8 idiv sub
+	
+    end
+	
+	CS_POP
+} def
+
+% index(coord) -> i
+/_coord_Index_i_ {
+	(/_coord_Index_i_) CS_PUT
+	
+	3 dict begin
+	
+	/cs exch def
+	
+	/col { cs 0 get 97 sub } bind def
+
+	/row { 7 cs 1 get 49 sub sub } bind def
+	
+	col 0 lt { (invalid col) == } if
+	col 7 gt { (invalid col) == } if
+	row 0 lt { (invalid row) == } if
+	row 7 gt { (invalid row) == } if
+	
+	row 8 mul col add
+	
+	end
+
+	CS_POP
+} def
+
+% coord(index) -> c
+/_index_Coord_c_ {
+	(/_index_Coord_c_) CS_PUT
+	
+	2 dict begin
+
+	/i_ exch def
+	
+	%i_ type ==only i ==
+	i_ _index_IsInBoardRange_b_ false eq {
+		(-- BAD INDEX:) ==only i_ ==
+		quit
+	} if
+
+	/col i_ 8 mod 97 add def
+	
+	/row 8 i_ 8 idiv sub 48 add def
+	
+	%(col: ) ==only col ==
+	%(row: ) ==only row ==
+	
+	/c__ 2 string def
+		
+	c__ 0 col put
+	c__ 1 row put
+	
+	c__ % dup ==
+
+	end
+	
+	CS_POP
+} def
+
+% piece(board, coord) -> p
+/_board_index_Piece_p_ {
+	(/_board_index_Piece_p_) CS_PUT
+	
+	% board
+	% index
+	1 getinterval % return value
+	
+	CS_POP
+} def
+
+% piece(board, coord) -> p
+/_board_coord_Piece_p_ {
+	(/_board_coord_Piece_p_ BEGIN) CS_PUT
+	
+	3 dict begin
+	
+	/c exch def
+	/board exch def
+		
+	board c _coord_Index_i_ _board_index_Piece_p_ % return value
+	
+	end
+
+	CS_POP
+} def
+
+% isInBoardRange(index) -> b
+/_index_IsInBoardRange_b_ {
+	(/_index_IsInBoardRange_b_) CS_PUT
+	
+	dup 0 ge
+	exch
+	63 le
+	and
+	
+	CS_POP
+} def
+
+% tells if two arrays have Equal contents
+/_a1_a2_HaveEqualContents_b_ {
+	(/_a1_a2_HaveEqualContents_b_) CS_PUT
+
+	5 dict begin
+	
+	/a2 exch def
+	/a1 exch def
+	
+	/r true def
+
+	a1 length a2 length eq {
+		0 1 a1 length 1 sub {
+			/i exch def
+			
+			a1 i get a2 i get ne {
+				/r false def
+				exit
+			} if
+			
+		} for
+	} {
+	  /r false def
+	} ifelse
+	
+	r
+	
+	end
+
+	CS_POP
+} def
+
+% dupLowerCase(p) -> p
+/_p_DupLowerCase_p_ {
+	(/_p_DupLowerCase_p_) CS_PUT
+	
+	3 dict begin
+
+	/p exch def
+	
+	{
+		(.rnbkqp) p search {
+			pop pop pop
+			p
+			exit
+		} {
+			pop
+		} ifelse
+		
+		(RNBKQPX) p search {
+			pop pop pop
+			
+			/low ( ) def
+			low 0 p 0 get 32 add put
+			low
+			%(p: ) ==only p ==only ( i: ) ==only i ==only ( low: ) ==only low ==
+			
+			exit
+		} {
+			pop
+		} ifelse
+		
+		(ERROR: piece unknown: ) =only p ==
+		null exit
+	} loop
+	
+	end
+	
+	CS_POP	
+} def
+
+% pieceIndex(board, piece) -> i
+/_board_piece_PieceIndex_i_ {
+	(/_board_piece_PieceIndex_i_) CS_PUT
+	
+	5 dict begin
+	
+	/p exch def
+	/b exch def
+	
+	/pIndex null def
+	
+	b p search {
+		/pIndex exch length def pop pop
+	} {
+		pop
+	} ifelse
+	
+	pIndex
+	
+	end
+	
+	CS_POP
+} def
+
+% isWhite(piece) -> b
+/_piece_IsWhite_b_ {
+	(/_piece_IsWhite_b_) CS_PUT
+	
+	% p on stack
+	(RNBKQP) exch search
+	
+	{ pop pop pop true } { pop false } ifelse
+	
+	CS_POP
+} def
+
+% isBlack(piece) -> b
+/_piece_IsBlack_b_ {
+	(/_piece_IsBlack_b_) CS_PUT
+
+	% p on stack
+	(rnbkqp) exch search
+	
+	{ pop pop pop true } { pop false } ifelse
+
+	CS_POP
+} def
+
+% isEmpty(piece) -> b
+/_piece_IsEmpty_b_ {
+	(/_piece_IsEmpty_b_) CS_PUT
+	% p on stack
+	(.) eq
+	CS_POP
+} def
+
+% dupReversed(a) -> a
+/_a_DupReversed_a_ {
+	(/_a_DupReversed_a_) CS_PUT
+	
+	2 dict begin
+	
+	/a1 exch def
+	
+	/a2 a1 length array def
+	
+	0 1 a1 length 1 sub {
+		/i exch def
+		a2 a1 length i sub 1 sub a1 i get put
+	} for
+	
+	a2
+
+	end
+	
+	CS_POP
+} def

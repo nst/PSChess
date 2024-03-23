@@ -1,0 +1,998 @@
+% Nicolas Seriot
+% 2024-03-23
+% https://github.com/nst/PSChess
+% https://seriot.ch/projects/pschess.html
+
+(logic_chess.ps) run
+
+/AssertTypeName {
+	1 dict begin
+	/x exch def
+	x type /x type ne { (type error, expect nametype, got) x type == quit } if
+	end
+} bind def
+
+/AssertTypeBool {
+	1 dict begin
+	/x exch def
+	x type true type ne { (type error, expect boolean, got) x type == quit } if
+	end
+} bind def
+
+/AssertTypeString {
+	1 dict begin
+	/x exch def
+	x type () type ne { (type error, expect string, got) == x type == quit } if
+	end
+} bind def
+
+/AssertTypeInt {
+	1 dict begin
+	/x exch def
+	x type 0 type ne { (type error, expect int, got) == x type == quit } if
+	end
+} bind def
+
+/AssertTypeArray {
+	1 dict begin
+	/x exch def
+	x  type 0 array type ne { (type error, expect array, got) == x type == quit } if
+	end
+} bind def
+
+/AssertEmptyStack {
+	count 0 ne { (ERROR: stack should be empty, not ) =only count == (--------------) == pstack (--------------) == quit } if
+} def
+
+/_s_proc_AssertTrue {
+	/proc exch def
+	/s exch def
+	
+	proc exec true eq { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = quit } ifelse
+} def
+
+/_s_proc_AssertFalse {
+	/proc exch def
+	/s exch def
+	
+	proc exec false eq { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = quit } ifelse
+} def
+
+/_s_proc_AssertNull {
+	/proc exch def
+	/s exch def
+	
+	proc exec null eq { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = quit } ifelse
+} def
+
+/_s_proc_AssertNotNull {
+	/proc exch def
+	/s exch def
+	
+	proc exec null ne { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = quit } ifelse
+} def
+
+/_s_p1_p2_AssertEqual {
+	/p2 exch def
+	/p1 exch def
+	/s exch def
+	
+	p1 exec p2 exec eq { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = p1 =only ( ne ) =only p2 = quit } ifelse
+} def
+
+/_s_p1_p2_AssertNotEqual {
+	/p2 exch def
+	/p1 exch def
+	/s exch def
+	
+	p1 exec p2 exec ne { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = p1 =only ( eq ) =only p2 = quit } ifelse
+} def
+
+/_s_p1_p2_AssertArrayHaveEqualContents {
+	/p2 exch def
+	/p1 exch def
+	/s exch def
+	
+	p1 exec p2 exec _a1_a2_HaveEqualContents_b_ { (--) =only s =only (: PASS) = }{ s =only (: FAIL) = quit } ifelse
+} def
+
+/_movesDict_MovesList_a_ {
+	(/_movesDict_MovesList_a_) CS_PUT
+	
+	/a null def
+
+	5 dict begin
+
+	/d exch def
+
+	/m 64 array def
+
+	d {
+		/v exch def
+		/k exch def
+		0 1 v length 1 sub {
+			/i exch def
+			/o v i get def
+			o 1 eq {
+				m i 1 put
+			} if
+		} for		
+	} forall
+		
+	m _movesIntsOrNulls_MovesList_a_
+	
+	end
+	
+	CS_POP
+} def
+
+% -- test cases
+
+/TestPawnIntoQueen {
+	(/TestPawnIntoQueen) CS_PUT
+
+	save
+
+	NewGame
+
+	GameState (BOARD) (\
+........\
+P.......\
+n.......\
+........\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ put
+		
+	(TEST TestPawnIntoQueen.1) { GameState (CURRENT_PLAYER) get } { (white) } _s_p1_p2_AssertArrayHaveEqualContents
+
+	(TEST TestPawnIntoQueen.2) { GameState (BOARD) get (a8) _board_coord_Piece_p_ _piece_IsEmpty_b_ } _s_proc_AssertTrue
+	
+	GameState (BOARD) get (a7) (a8) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+
+	(TEST TestPawnIntoQueen.3) { GameState (CURRENT_PLAYER) get } { (black) } _s_p1_p2_AssertArrayHaveEqualContents
+		
+	(TEST TestPawnIntoQueen.4) { GameState (BOARD) get (a8) _board_coord_Piece_p_ } { (Q) } _s_p1_p2_AssertEqual
+
+	GameState (BOARD) get (a6) (b4) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+
+	(TEST TestPawnIntoQueen.5) { GameState (CURRENT_PLAYER) get } { (white) } _s_p1_p2_AssertArrayHaveEqualContents
+		
+	restore
+	
+	CS_POP
+} def
+
+/TestIndexInBoardRange {
+	(TestIndexInBoardRange) CS_PUT
+
+	10 dict begin
+
+	(TEST TestIndexInBoardRange.1) { -1 _index_IsInBoardRange_b_ } _s_proc_AssertFalse
+	(TEST TestIndexInBoardRange.2) {  0 _index_IsInBoardRange_b_ } _s_proc_AssertTrue
+	(TEST TestIndexInBoardRange.3) { 63 _index_IsInBoardRange_b_ } _s_proc_AssertTrue
+	(TEST TestIndexInBoardRange.4) { 64 _index_IsInBoardRange_b_ } _s_proc_AssertFalse
+	
+	end
+	
+	CS_POP
+} def
+
+/TestIsChecked {
+	(/TestIsChecked) CS_PUT
+
+	save
+
+	/b3 CreateBoard_b_ def
+	
+	b3 36 (q) putinterval % add black queen in e4
+	b3 52 (.) putinterval % remove pawn
+		
+	(-- TEST TestIsChecked.1) { b3 (white) [60] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ } _s_proc_AssertTrue
+	
+	(-- TEST TestIsChecked.2) { b3 (white) _board_whiteOrBlack_KingIsChecked_b_ } _s_proc_AssertTrue
+	
+	b3 52 (P) putinterval % add pawn back
+
+	(-- TEST TestIsChecked.3) { b3 (white) _board_whiteOrBlack_KingIsChecked_b_ } _s_proc_AssertFalse
+
+	restore
+	
+	CS_POP
+} def
+
+/TestBoard {
+	(TestBoard) CS_PUT
+
+	save
+
+	/testBoard (\
+r...k..K\
+Ppn.p.np\
+kK.b.Q..\
+..b....n\
+..p..rpb\
+P.k...nn\
+Bn.PbPnp\
+....K..R\
+) _s_Dup_s_ def
+
+	(TEST TestBoard.1) { testBoard (h1) _board_coord_Piece_p_ } { (R)  } _s_p1_p2_AssertEqual
+	(TEST TestBoard.2) { testBoard 63   _board_index_Piece_p_ } { (R)  } _s_p1_p2_AssertEqual
+	(TEST TestBoard.3) { 23 _index_Coord_c_                   } { (h6) } _s_p1_p2_AssertEqual
+	(TEST TestBoard.4) { (h6) _coord_Index_i_                 } { 23   } _s_p1_p2_AssertEqual
+
+	restore
+	
+	CS_POP
+} def
+
+/TestCoords {
+	(TestCoords) CS_PUT
+
+	save
+	
+	(TEST TestCoords.1) {  0 _index_Row_1-8_ } { 8 } _s_p1_p2_AssertEqual
+	(TEST TestCoords.2) {  7 _index_Row_1-8_ } { 8 } _s_p1_p2_AssertEqual
+	(TEST TestCoords.3) {  8 _index_Row_1-8_ } { 7 } _s_p1_p2_AssertEqual
+	(TEST TestCoords.4) { 55 _index_Row_1-8_ } { 2 } _s_p1_p2_AssertEqual
+	(TEST TestCoords.5) { 56 _index_Row_1-8_ } { 1 } _s_p1_p2_AssertEqual
+	(TEST TestCoords.6) { 63 _index_Row_1-8_ } { 1 } _s_p1_p2_AssertEqual
+          
+	(TEST TestCoords.1) {  0 _index_Col_a-h_ } { (a) } _s_p1_p2_AssertEqual
+	(TEST TestCoords.2) {  7 _index_Col_a-h_ } { (h) } _s_p1_p2_AssertEqual
+	(TEST TestCoords.3) {  8 _index_Col_a-h_ } { (a) } _s_p1_p2_AssertEqual
+	(TEST TestCoords.4) { 55 _index_Col_a-h_ } { (h) } _s_p1_p2_AssertEqual
+	(TEST TestCoords.5) { 56 _index_Col_a-h_ } { (a) } _s_p1_p2_AssertEqual
+	(TEST TestCoords.6) { 63 _index_Col_a-h_ } { (h) } _s_p1_p2_AssertEqual
+	      
+	(TEST TestCoords.1) { (asd) _c_IsValidCoordinate_b_ } _s_proc_AssertFalse
+	(TEST TestCoords.2) { (a1)  _c_IsValidCoordinate_b_ } _s_proc_AssertTrue
+	(TEST TestCoords.3) { (z1)  _c_IsValidCoordinate_b_ } _s_proc_AssertFalse
+	(TEST TestCoords.4) { (h8)  _c_IsValidCoordinate_b_ } _s_proc_AssertTrue
+	(TEST TestCoords.5) { (a9)  _c_IsValidCoordinate_b_ } _s_proc_AssertFalse
+	(TEST TestCoords.6) { ()    _c_IsValidCoordinate_b_ } _s_proc_AssertFalse
+          
+	(TEST TestCoords.5) { (K) _piece_IsWhite_b_ } _s_proc_AssertTrue
+	(TEST TestCoords.6) { (k) _piece_IsWhite_b_ } _s_proc_AssertFalse
+	(TEST TestCoords.7) { (K) _piece_IsBlack_b_ } _s_proc_AssertFalse
+	(TEST TestCoords.8) { (k) _piece_IsBlack_b_ } _s_proc_AssertTrue
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestArraysEquality {
+	(TestArraysEquality) CS_PUT
+
+	(TEST TestArraysEquality.1) { [0 1 2] [0 0 0]   _a1_a2_HaveEqualContents_b_ } _s_proc_AssertFalse
+	(TEST TestArraysEquality.2) { [0 1 2] [0 1]     _a1_a2_HaveEqualContents_b_ } _s_proc_AssertFalse
+	(TEST TestArraysEquality.3) { [0 1 2] [0 1 2 3] _a1_a2_HaveEqualContents_b_ } _s_proc_AssertFalse
+	(TEST TestArraysEquality.4) { [0 1 2] [0 1 2]   _a1_a2_HaveEqualContents_b_ } _s_proc_AssertTrue
+	
+	CS_POP
+} def
+
+/TestMoves {
+	(/TestMoves) CS_PUT
+
+	save
+
+	/b CreateBoard_b_ def
+	
+	/moves { b (g1) _board_coord_ValidMoves_a_ } def
+	
+	(TEST TestMoves.1) { moves 52 get } { null } _s_p1_p2_AssertEqual
+	(TEST TestMoves.2) { moves 45 get } { 1    } _s_p1_p2_AssertEqual
+	(TEST TestMoves.3) { moves 47 get } { 1    } _s_p1_p2_AssertEqual
+	(TEST TestMoves.4) { moves 62 get } { null } _s_p1_p2_AssertEqual
+
+	restore
+	
+	CS_POP
+} def
+
+/TestMoves2 {
+	(TestMoves2) CS_PUT
+
+	save
+	
+	/b CreateBoard_b_ def
+
+	/testBoard (\
+r...k..K\
+Ppn.p.np\
+kK.b.Q..\
+..b....n\
+..p..rpb\
+P.k...nn\
+Bn.PbPnp\
+....K..R\
+) _s_Dup_s_ def
+
+	(TEST TestMoves2.1) { [1 1 null 1] _movesIntsOrNulls_MovesList_a_                              } { [0 1 3]      } _s_p1_p2_AssertArrayHaveEqualContents	
+	(TEST TestMoves2.2) { b (a2) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_         } { [32 40]      } _s_p1_p2_AssertArrayHaveEqualContents	
+	(TEST TestMoves2.3) { b (e1) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_         } { []           } _s_p1_p2_AssertArrayHaveEqualContents
+	(TEST TestMoves2.4) { b (g8) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_         } { [21 23]      } _s_p1_p2_AssertArrayHaveEqualContents
+	(TEST TestMoves2.5) { testBoard (a6) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [8 17 24 25] } _s_p1_p2_AssertArrayHaveEqualContents
+
+	restore
+	
+	CS_POP
+} def
+
+/TestQueenMovesAndChecks {
+	(TestQueenMovesAndChecks) CS_PUT
+
+	save
+
+	% queen moves in board 2 include (k) in 60
+	
+	/b CreateBoard_b_ def
+
+	(TEST TestQueenMovesAndChecks.1) { b (e4) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [] } _s_p1_p2_AssertArrayHaveEqualContents
+
+	(TEST TestQueenMovesAndChecks.2) { b (white) _board_whiteOrBlack_KingIsChecked_b_ } _s_proc_AssertFalse
+	
+	b 36 (q) putinterval % add black queen
+	b 52 (.) putinterval % remove pawn
+
+	(TEST TestQueenMovesAndChecks.3) { b (e4) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [18 20 22 27 28 29 32 33 34 35 37 38 39 43 44 45 50 52 54 60] } _s_p1_p2_AssertArrayHaveEqualContents
+
+	% b _board_PrintBoard quit
+
+	(TEST TestQueenMovesAndChecks.4) { b (white) _board_whiteOrBlack_LegalMoves_d_ _movesDict_MovesList_a_ } { [16 25 31 32 33 34 35 37 38 39 40 41 42 43 45 46 47 52] } _s_p1_p2_AssertArrayHaveEqualContents
+
+	(TEST TestQueenMovesAndChecks.5) { b (white) _board_whiteOrBlack_KingIsChecked_b_ } _s_proc_AssertTrue
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestCapture1 {
+	(TestCapture1) CS_PUT
+
+	save
+	
+	NewGame % resets captured lists
+
+	(TEST TestCapture1.1) { GameState (CAPTURED_BY_WHITE) get 0 1 getinterval } { (.) } _s_p1_p2_AssertEqual
+
+	(p) GameState (CAPTURED_BY_WHITE) get _p_a_AddToCaptured
+	
+	(TEST TestCapture1.2) { GameState (CAPTURED_BY_WHITE) get 0 1 getinterval } { (p) } _s_p1_p2_AssertEqual
+	
+	restore
+} def
+
+/TestCapture2 {
+	(TestCapture2) CS_PUT
+
+	save
+	
+	NewGame % resets captured lists
+	
+	/testBoard (\
+........\
+........\
+........\
+........\
+........\
+...r..q.\
+..P...N.\
+........\
+) _s_Dup_s_ def
+
+	(TEST TestCapture2.1) { GameState (CAPTURED_BY_WHITE) get 0 1 getinterval } { (.) } _s_p1_p2_AssertEqual
+
+	testBoard (c2) (d3) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	(TEST TestCapture2.2) { GameState (CAPTURED_BY_WHITE) get 0 1 getinterval } { (r) } _s_p1_p2_AssertEqual
+
+	testBoard (g3) (g2) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	(TEST TestCapture2.3) { GameState (CAPTURED_BY_BLACK) get 0 1 getinterval } { (N) } _s_p1_p2_AssertEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestMoveFromToOrigin1 {
+	(TestMoveFromToOrigin1) CS_PUT
+
+	save
+	
+	NewGame % resets captured lists
+	
+	/b CreateBoard_b_ def
+		
+	(TEST TestMoveFromToOrigin.1) { b (a1) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [] } _s_p1_p2_AssertArrayHaveEqualContents
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestMoveFromToOrigin2 {
+	(TestMoveFromToOrigin2) CS_PUT
+
+	save
+	
+	NewGame % resets captured lists
+	
+	/b CreateBoard_b_ def
+	
+	b (a1) (a1) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	validMoves ==
+	(TEST TestMoveFromToOrigin2.1) { canMove } _s_proc_AssertFalse
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestArrayReversed {
+	(TestArrayReversed) CS_PUT
+
+	save
+	
+	(TEST TestArrayReversed.1) { [1 2 3] _a_DupReversed_a_ } { [3 2 1] } _s_p1_p2_AssertArrayHaveEqualContents
+	
+	restore
+	
+} def
+
+/TestEval {
+	(TestEval) CS_PUT
+
+	save
+
+	GameState (BOARD) (\
+........\
+P.......\
+........\
+........\
+........\
+........\
+.rr.....\
+........\
+) _s_Dup_s_ put
+	
+	(TEST TestEval.1) { GameState (BOARD) get _b_Eval_score_ } { 150 1020 sub } _s_p1_p2_AssertEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestBlackAutoMove {
+	(TestBlackAutoMove) CS_PUT
+
+	save
+	
+	GameState (BOARD) (\
+.......k\
+.Q......\
+Q.......\
+........\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ put
+	
+	GameState (CURRENT_PLAYER) (black) put
+	
+	BlackAutoMoveAndCheckGameState_highlights_gameIsOver_
+	/gameIsOver exch def
+	/highlights exch def
+
+	(TEST TestBlackAutoMove.1) { gameIsOver } _s_proc_AssertFalse
+
+	% black have played
+	(TEST TestBlackAutoMove.2) { GameState (CURRENT_PLAYER) get } { (white) } _s_p1_p2_AssertEqual
+	
+	% black had only one possible move
+	(TEST TestBlackAutoMove.3) { GameState (BOARD) get 6 1 getinterval } { (k) } _s_p1_p2_AssertEqual
+
+	% white does check mate	
+	GameState (BOARD) get (a6) (a8) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	BlackAutoMoveAndCheckGameState_highlights_gameIsOver_
+	/gameIsOver exch def
+	/highlights exch def
+		
+	(TEST TestBlackAutoMove.4) { gameIsOver } _s_proc_AssertTrue
+		
+	restore
+	
+	CS_POP
+} def
+
+/TestCanMove {
+	(TestCanMove) CS_PUT
+
+	save
+
+	% black checked, can move
+
+	/black_checked_board (\
+k.......\
+........\
+Q.......\
+........\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ def	
+
+	% shorter version
+	/canMove (black) black_checked_board _player_board_CanPlay_b_ def
+	
+	(TEST TestCanMove.1) { canMove } _s_proc_AssertTrue
+
+	% longer version
+	(black) black_checked_board false _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
+	/bestScore exch def
+	/bestFrom exch def
+	/bestTo exch def
+    
+	(-- black bestScore:) =only bestScore ==
+	(-- black bestFrom:) =only bestFrom ==
+	(-- black bestTo:) =only bestTo ==
+    
+	(TEST TestCanMove.2) { bestTo } _s_proc_AssertNotNull
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestCannotMove {
+	(TestCannotMove) CS_PUT
+
+	save
+
+	% black checked, cannot move, check mate
+
+	/black_checked_mate_board (\
+k.......\
+.Q......\
+..Q.....\
+........\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ def
+
+	% shorter version
+	/canMove (black) black_checked_mate_board _player_board_CanPlay_b_ def
+
+	(TEST TestCannotMove.2) { canMove } _s_proc_AssertFalse
+
+	% longer version
+	(black) black_checked_mate_board false _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
+
+	/bestScore exch def
+	/bestFrom exch def
+	/bestTo exch def
+	
+	(-- black bestScore:) =only bestScore ==
+	(-- black bestFrom:) =only bestFrom ==
+	(-- black bestTo:) =only bestTo ==
+
+	(TEST TestCannotMove.2) { bestTo } _s_proc_AssertNull
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestEnPassant {
+	(TestEnPassant) CS_PUT
+
+	% https://en.wikipedia.org/wiki/En_passant
+	
+	save
+
+	/board (\
+........\
+...p....\
+........\
+....P...\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ def
+	
+	% black pawn moves 2 steps forward
+	% white takes it "en-passant"
+	
+	GameState (CURRENT_PLAYER) (black) put
+
+	(TEST TestEnPassant.1) { GameState (EN_PASSANT_BLACK_CANDIDATE) get } _s_proc_AssertNull
+	
+    board (d7) (d5) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_						
+    /_canMove exch def
+    /_highlights exch def
+    /_msg exch def
+	
+	(TEST TestEnPassant.2) { GameState (EN_PASSANT_BLACK_CANDIDATE) get } { (d5) } _s_p1_p2_AssertEqual
+	
+	(TEST TestEnPassant.3) { board (e5) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [19 20] } _s_p1_p2_AssertArrayHaveEqualContents
+	
+	% perform actual move
+	
+	board (e5) (d6) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	(TEST TestEnPassant.3) { canMove } _s_proc_AssertTrue
+
+	% test captures state
+	
+	GameState (CAPTURED_BY_WHITE) get ==
+	
+	(TEST TestEnPassant.4) { GameState (CAPTURED_BY_WHITE) get 0 1 getinterval } { (p) } _s_p1_p2_AssertEqual
+	
+	% test board after capture
+
+	/b2 (\
+........\
+........\
+...P....\
+........\
+........\
+........\
+........\
+........\
+) _s_Dup_s_ def
+	
+	(TEST TestEnPassant.5) { board } { b2 } _s_p1_p2_AssertArrayHaveEqualContents
+	
+	% no more black candidate
+
+	(TEST TestEnPassant.6) { GameState (EN_PASSANT_BLACK_CANDIDATE) get } _s_proc_AssertNull
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestCheckCastling {
+	(TestCheckCastling) CS_PUT
+
+	save
+	
+	NewGame
+	
+	/b (\
+........\
+....q...\
+........\
+........\
+........\
+........\
+....P...\
+....K..R\
+) _s_Dup_s_ def
+	
+	(TEST TestNotCheckCastling.1) { b (white) _board_whiteOrBlack_KingIsChecked_b_ } _s_proc_AssertFalse
+	
+	(TEST TestNotCheckCastling.2) { b (e1) _board_coord_ValidMoves_a_ _movesIntsOrNulls_MovesList_a_ } { [51 53 59 61 62] } _s_p1_p2_AssertArrayHaveEqualContents
+
+	b (e1) (g1) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	%(msg: ) ==only msg ==
+	%(validMoves: ) ==only validMoves ==
+	%(canMove: ) ==only canMove ==
+
+	(TEST TestNotCheckCastling.3) { canMove } _s_proc_AssertTrue
+	
+	% remove pawn
+	
+	b 52 (.) putinterval
+
+	b (e1) (g1) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	%(msg: ) ==only msg ==
+	%(validMoves: ) ==only validMoves ==
+	%(canMove: ) ==only canMove ==
+
+	(TEST TestNotCheckCastling.4) { canMove } _s_proc_AssertFalse
+	
+	% move (q) so that (K) is not checked, but still cannot castle
+	
+	b 12 (.) putinterval
+	b 13 (q) putinterval
+	
+	b (e1) (g1) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+	
+	%(msg: ) ==only msg ==
+	%(validMoves: ) ==only validMoves ==
+	%(canMove: ) ==only canMove ==
+
+	(TEST TestNotCheckCastling.5) { canMove } _s_proc_AssertFalse
+	
+	restore
+
+	CS_POP
+} def
+
+/TestKingIndex {
+	(TestKingIndex) CS_PUT
+
+	save
+	
+	/b (\
+........\
+....q...\
+........\
+........\
+........\
+........\
+........\
+....K..R\
+) _s_Dup_s_ def
+
+	(TEST TestKingIndex.1) { b (K) _board_piece_PieceIndex_i_ } { 60 } _s_p1_p2_AssertEqual	
+
+	b 60 (.) putinterval
+
+	(TEST TestKingIndex.2) { b (K) _board_piece_PieceIndex_i_ } { null } _s_p1_p2_AssertEqual	
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestBoardEval {
+	(TestBoardEval) CS_PUT
+
+	save
+	
+	/b (\
+........\
+...Rn...\
+........\
+....Q...\
+........\
+........\
+.P......\
+........\
+) _s_Dup_s_ def
+
+	(TEST TestBoardEval.1) { b _b_Eval_score_ } { 110 510 add 325 sub 905 add } _s_p1_p2_AssertEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestAutoMove1 {
+	(TestAutoMove1) CS_PUT
+
+	save
+
+	/b (\
+k.......\
+........\
+........\
+........\
+........\
+........\
+........\
+Q.......\
+) _s_Dup_s_ def
+	
+	(white) b _player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_
+	
+	/lowestMove exch def
+	/lowestEval exch def
+	/highestMove exch def
+	/highestEval exch def
+	/movesDict exch def
+	
+	(-- lowestMove: ) =only lowestMove ==
+	(-- lowestEval: ) =only lowestEval ==
+	(-- highestMove: ) =only highestMove ==
+	(-- highestEval: ) =only highestEval ==
+	(-- movesDict: ) =only movesDict == % _d_PrintDict
+	
+	(TEST TestAutoMove.1) { highestMove } { (a1a8) } _s_p1_p2_AssertEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestAutoMove2 {
+	(TestAutoMove2) CS_PUT
+
+	save
+
+	NewGame
+
+	/b (\
+........\
+.p......\
+r.......\
+........\
+........\
+........\
+........\
+Q.......\
+) _s_Dup_s_ def
+
+	%GameDict (BOARD) b put
+	
+	(white) b false _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
+	
+	/bestScore exch def
+	/bestFrom exch def
+	/bestTo exch def
+	
+	%(-- bestScore: ) =only bestScore ==
+	%(-- bestFrom: ) =only bestFrom ==
+	%(-- bestTo: ) =only bestTo ==
+	
+	(TEST TestAutoMove.2.1) { bestTo } { (a6) } _s_p1_p2_AssertNotEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestAutoMove3 {
+	(TestAutoMove3) CS_PUT
+
+	save
+
+	NewGame
+
+	/b (\
+........\
+.P......\
+........\
+........\
+........\
+......r.\
+.......P\
+k......K\
+) _s_Dup_s_ def
+
+	%GameDict (BOARD) b put
+	
+	(white) b false _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
+	
+	/bestScore exch def
+	/bestFrom exch def
+	/bestTo exch def
+	
+	(-- bestScore: ) =only bestScore ==
+	(-- bestFrom: ) =only bestFrom ==
+	(-- bestTo: ) =only bestTo ==
+	
+	(TEST TestAutoMove.2.3) { bestTo } { (b8) } _s_p1_p2_AssertEqual
+	
+	restore
+	
+	CS_POP
+} def
+
+/TestEndingPhase {
+	(TestEndingPhase) CS_PUT
+
+	save
+	
+	NewGame
+	
+	/b (\
+........\
+r...q...\
+.....P..\
+........\
+........\
+........\
+........\
+....k..K\
+) _s_Dup_s_ def
+	
+	(TEST TestEndingPhase.1) { GameState (ENDING_HAS_BEGUN) get } _s_proc_AssertFalse
+	
+	%(--1) ==
+	%b _board_MaterialValue_white_black_ ==
+	%== ==
+	
+	b (f6) (e7) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_	
+	/msg exch def
+	/validMoves exch def
+	/canMove exch def
+
+	%(--2) ==
+	%b _board_MaterialValue_white_black_ ==
+	%== ==
+	
+	(TEST TestEndingPhase.2) { GameState (ENDING_HAS_BEGUN) get } _s_proc_AssertTrue
+		
+	restore
+	
+	CS_POP
+} def
+
+/RunBoardLogicTests {
+	(RunBoardLogicTests) CS_PUT
+
+	NewGame
+	
+	TestBoard
+	TestCoords
+	TestArraysEquality
+	TestMoves
+	TestMoves2
+	TestIndexInBoardRange
+	TestKingIndex
+	TestIsChecked
+	TestQueenMovesAndChecks
+	TestCapture1
+	TestCapture2
+	TestMoveFromToOrigin1
+	TestMoveFromToOrigin2
+	TestPawnIntoQueen
+	TestArrayReversed
+	TestEval
+	TestEnPassant
+	TestCheckCastling
+	TestCanMove
+	TestCannotMove
+	TestBlackAutoMove
+	TestBoardEval
+	TestAutoMove1
+	TestAutoMove2
+	TestAutoMove3
+	TestEndingPhase
+	
+	(-- RunBoardLogicTests PASSED) ==
+	
+	CS_POP
+} def
+
+RunBoardLogicTests
+
