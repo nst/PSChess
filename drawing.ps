@@ -133,7 +133,13 @@
 		% iterate board, draw squares and pieces
 	
 		gsave
-	
+
+		% clear page, required with flushpage in ghostview
+		gsave
+		1 setgray
+		-20 -20 400 300 rectfill
+	    grestore
+
 		SQUARE_SIZE 0 mul SQUARE_SIZE 7 mul translate
 		0 0 moveto
 		

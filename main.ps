@@ -7,9 +7,15 @@
 
 % gs -DNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="%d.pdf" main.ps
 
+% gv -scale=2 -
+/USE_GHOSTVIEW false def % set to true on GhostView
+USE_GHOSTVIEW {/showpage {flushpage} def} if
+
 (drawing.ps) run
 
 << /PageSize [300 200] >> setpagedevice
+
+0 200 translate
 
 /Courier findfont 12 scalefont setfont
 32 740 moveto
