@@ -39,6 +39,12 @@ PDF output:
 
 <img src="pschess.png" width="500" align="center"></src>
 
+You can also play directly in GhostView with:
+
+1. in `main.ps`, set `USE_GHOSTVIEW` to `true`
+2. `gv -scale=2 -` (mind the trailing dash)
+3. (main.ps) run
+
 #### Limitations
 
 - human plays white, computer plays black
