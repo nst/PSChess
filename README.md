@@ -43,7 +43,7 @@ You can also play directly in GhostView with:
 
 1. in `main.ps`, set `USE_GHOSTVIEW` to `true`
 2. `gv -scale=2 -` (mind the trailing dash)
-3. (main.ps) run
+3. in GhostScript console, type `(main.ps) run`
 
 #### Limitations
 
