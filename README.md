@@ -14,7 +14,7 @@ See also these two articles on seriot.ch:
 - How to implement a chess engine in PostScript?
 - Can you play chess against your printer?
 
-#### Usage
+#### Play in GhostScript
 
 You can use PSChess in GhostScript with the following arguments:
 
@@ -39,11 +39,30 @@ PDF output:
 
 <img src="pschess.png" width="500" align="center"></src>
 
+#### Play in GhostView
+
 You can also play directly in GhostView with:
 
 1. in `main.ps`, set `USE_GHOSTVIEW` to `true`
 2. `gv -scale=2 -` (mind the trailing dash)
 3. in GhostScript console, type `(main.ps) run`
+
+#### Play on an actual printer
+
+    cat pschess_compact.ps - | nc 172.20.10.2 9100
+    
+    <enter>
+    
+    rnbqkbnr             
+    pppppppp        0
+    ........
+    ........        ................
+    ........        ................
+    ........
+    PPPPPPPP        white turn                      
+    RNBQKBNR        
+    
+    >d2d4
 
 #### Limitations
 
