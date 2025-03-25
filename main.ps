@@ -5,17 +5,17 @@
 % https://github.com/nst/PSChess
 % https://seriot.ch/projects/pschess.html
 
+% gs -DNOSAFER main.ps
+/showpage {flushpage} def % comment to produce output files, and use:
 % gs -DNOSAFER -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile="%d.pdf" main.ps
-
-% gv -scale=2 -
-/USE_GHOSTVIEW false def % set to true on GhostView
-USE_GHOSTVIEW {/showpage {flushpage} def} if
+% gs -DNOSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -sOutputFile="%d.png" -r300 main.ps
+% magick -delay 50 *.png pschess.gif
 
 (drawing.ps) run
 
 << /PageSize [300 200] >> setpagedevice
 
-0 200 translate
+%200 400 translate
 
 /Courier findfont 12 scalefont setfont
 32 740 moveto
@@ -32,75 +32,75 @@ grestore
 showpage
 
 {
-	/userInput 128 string def
-	(>) print flush
-	(%lineedit) (r) file userInput readline
-	pop % bool
-	
-	token not { () } if
-	
-	{	
-		exch pop
-		dup length 4 eq {
-			dup
+    /userInput 128 string def
+    (>) print flush
+    (%lineedit) (r) file userInput readline
+    pop % bool
+    
+    token not { () } if
+    
+    {    
+        exch pop
+        dup length 4 eq {
+            dup
 
-			/s1 exch (                                                                ) cvs def
-			/s2 exch (                                                                ) cvs def
-			
-			/fromCoord { s1 0 2 getinterval } def
-			/toCoord { s2 2 2 getinterval } def
-			
-			fromCoord _c_IsValidCoordinate_b_ toCoord _c_IsValidCoordinate_b_ and not {
-				(-- BAD COMMAND) ==
-				gsave
-				190 150 moveto
-				(BAD COMMAND) show
-				grestore
-				exit
-			} if
-		   
-		   GameState (BOARD) get fromCoord toCoord false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
-		   
-		   /msg exch def
-		   /validMoves exch def
-		   /canMove exch def
-		   /canMoveCode canMove{1}{2}ifelse def
+            /s1 exch (                                                                ) cvs def
+            /s2 exch (                                                                ) cvs def
+            
+            /fromCoord { s1 0 2 getinterval } def
+            /toCoord { s2 2 2 getinterval } def
+            
+            fromCoord _c_IsValidCoordinate_b_ toCoord _c_IsValidCoordinate_b_ and not {
+                (-- BAD COMMAND) ==
+                gsave
+                190 150 moveto
+                (BAD COMMAND) show
+                grestore
+                exit
+            } if
+           
+           GameState (BOARD) get fromCoord toCoord false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
+           
+           /msg exch def
+           /validMoves exch def
+           /canMove exch def
+           /canMoveCode canMove{1}{2}ifelse def
 
-		   PrintBoardAndGameState
-		   
-   	       validMoves _highlights_DrawBoard
-			
-		   showpage
-		   
-		   exit
-		} if
-		
-		clear
-		(Usage:) =
-		(h2h3 - moves h2 to h3) =
-		exit
-		
-	} loop
-	
-	GameState (CURRENT_PLAYER) get (black) eq {
-		
-	    10 dict begin
-		
-	    BlackAutoMoveAndCheckGameState_highlights_gameIsOver_
-		
-		/gameIsOver exch def
-		/highlights exch def
-	  	
-	    PrintBoardAndGameState
-	  
-	    highlights _highlights_DrawBoard
-				
-	    showpage
+           PrintBoardAndGameState
+           
+              validMoves _highlights_DrawBoard
+            
+           showpage
+           
+           exit
+        } if
+        
+        clear
+        (Usage:) =
+        (h2h3 - moves h2 to h3) =
+        exit
+        
+    } loop
+    
+    GameState (CURRENT_PLAYER) get (black) eq {
+        
+        10 dict begin
+        
+        BlackAutoMoveAndCheckGameState_highlights_gameIsOver_
+        
+        /gameIsOver exch def
+        /highlights exch def
+          
+        PrintBoardAndGameState
       
-	  	gameIsOver { quit } if
-	  
-	    end
+        highlights _highlights_DrawBoard
+                
+        showpage
+      
+          gameIsOver { quit } if
+      
+        end
 
-	} if
-	
+    } if
+    
 } loop

@@ -13,858 +13,858 @@
 
 /NewGame {
 
-	/GameState
-	<<
-	    (BOARD) ()
-		(CURRENT_PLAYER) (white)
-    	(LAST_MOVE) ()
-		(WHITE_DID_CASTLE) false
-		(BLACK_DID_CASTLE) false
-		(CAPTURED_BY_BLACK) (................) _s_Dup_s_
-		(CAPTURED_BY_WHITE) (................) _s_Dup_s_
-		(LAST_MESSAGE) ()
-		(ENDING_HAS_BEGUN) false
-		(EN_PASSANT_WHITE_CANDIDATE) null
-		(EN_PASSANT_BLACK_CANDIDATE) null
-		(PLAYER_TURN_MESSAGE) ()
-	>> def
-	
+    /GameState
+    <<
+        (BOARD) ()
+        (CURRENT_PLAYER) (white)
+        (LAST_MOVE) ()
+        (WHITE_DID_CASTLE) false
+        (BLACK_DID_CASTLE) false
+        (CAPTURED_BY_BLACK) (................) _s_Dup_s_
+        (CAPTURED_BY_WHITE) (................) _s_Dup_s_
+        (LAST_MESSAGE) ()
+        (ENDING_HAS_BEGUN) false
+        (EN_PASSANT_WHITE_CANDIDATE) null
+        (EN_PASSANT_BLACK_CANDIDATE) null
+        (PLAYER_TURN_MESSAGE) ()
+    >> def
+    
     GameState (BOARD) CreateBoard_b_ put
-	GameState (LAST_PLAYER) (     ) _s_Dup_s_ put
-	GameState (LAST_MOVE) (     ) _s_Dup_s_ put
-	GameState (LAST_MESSAGE) (white turn                      ) _s_Dup_s_ put
-	GameState (ENDING_HAS_BEGUN) false put
+    GameState (LAST_PLAYER) (     ) _s_Dup_s_ put
+    GameState (LAST_MOVE) (     ) _s_Dup_s_ put
+    GameState (LAST_MESSAGE) (white turn                      ) _s_Dup_s_ put
+    GameState (ENDING_HAS_BEGUN) false put
 } def
 
 /PrintBoardAndGameState {
-	(/PrintBoardAndGameState) CS_PUT
+    (/PrintBoardAndGameState) CS_PUT
 
-	2 dict begin
+    2 dict begin
 
-	/b GameState (BOARD) get def
-	
-	()=
-	b  0 8 getinterval =only (        )=only GameState (LAST_MOVE) get =
-	b  8 8 getinterval =only (        )=only GameState (BOARD) get _b_Eval_score_ =
-	b 16 8 getinterval =
-	b 24 8 getinterval =only (        )=only GameState (CAPTURED_BY_BLACK) get =
-	b 32 8 getinterval =only (        )=only GameState (CAPTURED_BY_WHITE) get =
-	b 40 8 getinterval =
-	b 48 8 getinterval =only (        )=only GameState (LAST_MESSAGE) get =
-	b 56 8 getinterval =only (        )=only GameState (PLAYER_TURN_MESSAGE) get =
-	()=
-	
-	end
-	
-	CS_POP
+    /b GameState (BOARD) get def
+    
+    ()=
+    b  0 8 getinterval =only (        )=only GameState (LAST_MOVE) get =
+    b  8 8 getinterval =only (        )=only GameState (BOARD) get _b_Eval_score_ =
+    b 16 8 getinterval =
+    b 24 8 getinterval =only (        )=only GameState (CAPTURED_BY_BLACK) get =
+    b 32 8 getinterval =only (        )=only GameState (CAPTURED_BY_WHITE) get =
+    b 40 8 getinterval =
+    b 48 8 getinterval =only (        )=only GameState (LAST_MESSAGE) get =
+    b 56 8 getinterval =only (        )=only GameState (PLAYER_TURN_MESSAGE) get =
+    ()=
+    
+    end
+    
+    CS_POP
 } def
 
 /_p_a_AddToCaptured {
-	(/_p_a_AddToCaptured) CS_PUT
-	5 dict begin
+    (/_p_a_AddToCaptured) CS_PUT
+    5 dict begin
 
-	/a exch def
-	/p exch def
+    /a exch def
+    /p exch def
 
-	0 1 a length {
-		/i exch def
-		%a i 1 getinterval  ==
-		a i 1 getinterval (.) eq {
-			a i p _s_Dup_s_ putinterval
-			exit
-		} if
-	} for
-	
-	end
-	CS_POP
+    0 1 a length {
+        /i exch def
+        %a i 1 getinterval  ==
+        a i 1 getinterval (.) eq {
+            a i p _s_Dup_s_ putinterval
+            exit
+        } if
+    } for
+    
+    end
+    CS_POP
 } def
 
 /ChangePlayer_playerColor_ {
-	(/ChangePlayer_playerColor_) CS_PUT
+    (/ChangePlayer_playerColor_) CS_PUT
 
-	/s { GameState (CURRENT_PLAYER) get _whiteOrBlack_Invert_s_ } def	
-	
-	GameState (CURRENT_PLAYER) s put
+    /s { GameState (CURRENT_PLAYER) get _whiteOrBlack_Invert_s_ } def    
+    
+    GameState (CURRENT_PLAYER) s put
 
-	GameState (CURRENT_PLAYER) get
+    GameState (CURRENT_PLAYER) get
 
-	CS_POP
+    CS_POP
 } def
 
 /_board_index_IsWhite_b_ {
-	(/_board_index_IsWhite_b_) CS_PUT
-	exch _board_index_Piece_p_ _piece_IsWhite_b_
-	CS_POP
+    (/_board_index_IsWhite_b_) CS_PUT
+    exch _board_index_Piece_p_ _piece_IsWhite_b_
+    CS_POP
 } def
 
 /_board_index_IsBlack_b_ {
-	(/_board_index_IsBlack_b_) CS_PUT
-	exch _board_index_Piece_p_ _piece_IsBlack_b_
-	CS_POP
+    (/_board_index_IsBlack_b_) CS_PUT
+    exch _board_index_Piece_p_ _piece_IsBlack_b_
+    CS_POP
 } def
 
 /_board_index_IsEmpty_b_ {
-	(/_board_index_IsEmpty_b_) CS_PUT
-	exch _board_index_Piece_p_ _piece_IsEmpty_b_
-	CS_POP
+    (/_board_index_IsEmpty_b_) CS_PUT
+    exch _board_index_Piece_p_ _piece_IsEmpty_b_
+    CS_POP
 } def
 
 % [null 1 null 2 1] -> [1 4]
 /_movesIntsOrNulls_MovesList_a_ {
-	(/_movesIntsOrNulls_MovesList_a_) CS_PUT
-	
-	5 dict begin
-	
-	/m exch def
+    (/_movesIntsOrNulls_MovesList_a_) CS_PUT
+    
+    5 dict begin
+    
+    /m exch def
 
-	/a m length array def
-	
-	/n 0 def % count number of 'true'
-	
-	0 1 m length 1 sub {
-		/i exch def
-		/o m i get def
-		o 1 eq {
-			a n i put
-			/n n 1 add def
-		} if
-	} for
-			
-	a 0 n getinterval
-	
-	end
+    /a m length array def
+    
+    /n 0 def % count number of 'true'
+    
+    0 1 m length 1 sub {
+        /i exch def
+        /o m i get def
+        o 1 eq {
+            a n i put
+            /n n 1 add def
+        } if
+    } for
+            
+    a 0 n getinterval
+    
+    end
 
-	CS_POP
+    CS_POP
 } def
 
 /_board_indexFrom_indexTo_AreOpponents_b_ {
-	(/_board_indexFrom_indexTo_AreOpponents_b_) CS_PUT
-		
-	12 dict begin
+    (/_board_indexFrom_indexTo_AreOpponents_b_) CS_PUT
+        
+    12 dict begin
 
-	/ret false def
+    /ret false def
 
-	/toIndex exch def
-	/fromIndex exch def
-	/board exch def
+    /toIndex exch def
+    /fromIndex exch def
+    /board exch def
 
-	/fromPiece board fromIndex _board_index_Piece_p_ def
-	/toPiece   board toIndex   _board_index_Piece_p_ def
-	
-	/fromIsWhite fromPiece _piece_IsWhite_b_ def
-	/toIsWhite   toPiece   _piece_IsWhite_b_ def
-	
-	/fromIsBlack fromPiece _piece_IsBlack_b_ def
-	/toIsBlack   toPiece   _piece_IsBlack_b_ def
-	
-	fromIsWhite toIsBlack and fromIsBlack toIsWhite and or % return value
-	
-	end	
-	
-	CS_POP
+    /fromPiece board fromIndex _board_index_Piece_p_ def
+    /toPiece   board toIndex   _board_index_Piece_p_ def
+    
+    /fromIsWhite fromPiece _piece_IsWhite_b_ def
+    /toIsWhite   toPiece   _piece_IsWhite_b_ def
+    
+    /fromIsBlack fromPiece _piece_IsBlack_b_ def
+    /toIsBlack   toPiece   _piece_IsBlack_b_ def
+    
+    fromIsWhite toIsBlack and fromIsBlack toIsWhite and or % return value
+    
+    end    
+    
+    CS_POP
 } def
 
 /_board_indexFrom_indexTo_AreSameColor_b_ {
-	(_board_indexFrom_indexTo_AreSameColor_b_) CS_PUT
+    (_board_indexFrom_indexTo_AreSameColor_b_) CS_PUT
 
-	12 dict begin
-	
-	/toIndex exch def
-	/fromIndex exch def
-	/board exch def
+    12 dict begin
+    
+    /toIndex exch def
+    /fromIndex exch def
+    /board exch def
 
-	/fromPiece board fromIndex _board_index_Piece_p_ def
-	/toPiece   board toIndex   _board_index_Piece_p_ def
-	
-	/fromIsWhite fromPiece _piece_IsWhite_b_ def
-	/toIsWhite   toPiece   _piece_IsWhite_b_ def
-	
-	/fromIsBlack fromPiece _piece_IsBlack_b_ def
-	/toIsBlack   toPiece   _piece_IsBlack_b_ def
-	
-	fromIsWhite toIsWhite and fromIsBlack toIsBlack and or % return value
-	
-	end
+    /fromPiece board fromIndex _board_index_Piece_p_ def
+    /toPiece   board toIndex   _board_index_Piece_p_ def
+    
+    /fromIsWhite fromPiece _piece_IsWhite_b_ def
+    /toIsWhite   toPiece   _piece_IsWhite_b_ def
+    
+    /fromIsBlack fromPiece _piece_IsBlack_b_ def
+    /toIsBlack   toPiece   _piece_IsBlack_b_ def
+    
+    fromIsWhite toIsWhite and fromIsBlack toIsBlack and or % return value
+    
+    end
 
-	CS_POP
+    CS_POP
 } def
 
 /DirectionsForPiece
 <<
-	/N -8 def
-	/E  1 def
-	/S  8 def
-	/W -1 def
+    /N -8 def
+    /E  1 def
+    /S  8 def
+    /W -1 def
 
     (P) [N N N add N W add N E add]
-	(p) [S S S add S E add  S W add]
+    (p) [S S S add S E add  S W add]
     (n) [N N E add add
-	     E N E add add
-		 E S E add add
-		 S S E add add
-		 S S W add add
-		 W S W add add
-		 W N W add add
-		 N N W add add]
-	(b) [N E add S E add S W add N W add]
-	(r) [N E S W]
-	(q) [N E S W N E add S E add S W add N W add]
-	(k) [N E S W N E add S E add S W add N W add]
-	(.) []
+         E N E add add
+         E S E add add
+         S S E add add
+         S S W add add
+         W S W add add
+         W N W add add
+         N N W add add]
+    (b) [N E add S E add S W add N W add]
+    (r) [N E S W]
+    (q) [N E S W N E add S E add S W add N W add]
+    (k) [N E S W N E add S E add S W add N W add]
+    (.) []
 >> def
 
 /_board_coord_ValidMoves_a_ {
-	(/_board_coord_ValidMoves_a_) CS_PUT
-	
-	/legalMoves 64 array def
+    (/_board_coord_ValidMoves_a_) CS_PUT
+    
+    /legalMoves 64 array def
 
-	8 dict begin
+    8 dict begin
 
-	/fromCoord exch def
-	/board exch def
+    /fromCoord exch def
+    /board exch def
 
-	/fromIndex fromCoord _coord_Index_i_ def
-	
-	/p board fromIndex 1 getinterval def
-	
-	DirectionsForPiece p p (P) ne { _p_DupLowerCase_p_ } if get
-	
-	% directions on stack
-	{
-		/offset exch def
-		
-		% if offset < 0, iterate towards 0
-		% if offset > 0, iterate toward 63
-		/lastIndex offset 0 gt { 63 } { 0 } ifelse def
-		
-		/currentCol fromIndex _index_Col_a-h_ def
-		/currentRow fromIndex _index_Row_1-8_ def
+    /fromIndex fromCoord _coord_Index_i_ def
+    
+    /p board fromIndex 1 getinterval def
+    
+    DirectionsForPiece p p (P) ne { _p_DupLowerCase_p_ } if get
+    
+    % directions on stack
+    {
+        /offset exch def
+        
+        % if offset < 0, iterate towards 0
+        % if offset > 0, iterate toward 63
+        /lastIndex offset 0 gt { 63 } { 0 } ifelse def
+        
+        /currentCol fromIndex _index_Col_a-h_ def
+        /currentRow fromIndex _index_Row_1-8_ def
 
-		fromIndex offset lastIndex {
+        fromIndex offset lastIndex {
 
-			/toIndex exch def
-			
-			fromIndex toIndex eq not {
-            	
-				% don't go out of board
-				toIndex _index_IsInBoardRange_b_ not {
-					exit
-				} if
-				
-				% stop moving when over- or under-flowing board edges, including knights
-				/toCol toIndex _index_Col_a-h_ def
-				/toRow toIndex _index_Row_1-8_ def
-				
-				currentCol (a) eq toCol (g) eq and { exit } if
-				currentCol (a) eq toCol (h) eq and { exit } if
-				currentCol (b) eq toCol (h) eq and { exit } if
-				currentRow (1) eq toRow (8) eq and { exit } if
-				currentCol (g) eq toCol (a) eq and { exit } if
-				currentCol (h) eq toCol (a) eq and { exit } if
-				currentCol (h) eq toCol (b) eq and { exit } if
-				currentRow (8) eq toRow (1) eq and { exit } if
-				
-				p (p) eq p (P) eq or {
-										
-					% pawns cannot move sideways if they don't capture, unless it's en-passant
-					currentCol toCol ne {
-						
-						/isEnPassantWhite false def
-						/whiteEP GameState (EN_PASSANT_WHITE_CANDIDATE) get def
-						whiteEP null ne {
-							toRow 3 eq toCol whiteEP _coord_Index_i_ _index_Col_a-h_ eq and {
-								/isEnPassantWhite true def 
-							} if
-						} if
-						
-						/isEnPassantBlack false def
-						/blackEP GameState (EN_PASSANT_BLACK_CANDIDATE) get def
-						blackEP null ne {
-							toRow 6 eq toCol blackEP _coord_Index_i_ _index_Col_a-h_ eq and {
-								/isEnPassantBlack true def 
-							} if
-						} if
-
-						/isEnPassant isEnPassantWhite isEnPassantBlack or def
-						
-						board fromIndex toIndex _board_indexFrom_indexTo_AreOpponents_b_ not isEnPassant not and {
-							exit							
-						} if
-					} if
-					
-					% pawns cannot move +2 if not on their initial raw and +1 square being free
-					toRow currentRow sub abs 2 eq {
-						/pIsWhite p (P) eq def
-
-						currentRow pIsWhite {2}{7} ifelse ne { exit } if
-						board fromIndex 8 pIsWhite {sub}{add} ifelse _board_index_Piece_p_ _piece_IsEmpty_b_ not { exit } if						
-					} if
-					
-					% pawns cannot more forward if square is not empty
-					currentCol toCol eq {
-						board toIndex _board_index_Piece_p_ _piece_IsEmpty_b_ not {
-							exit
-						} if
-					} if
+            /toIndex exch def
+            
+            fromIndex toIndex eq not {
                 
-				} if
-				
-				board fromIndex toIndex _board_indexFrom_indexTo_AreSameColor_b_ {
-					exit
-				} if
-				
-				%(***** add to legal moves: ) ==only toIndex ==
-				legalMoves toIndex 1 put
-            	
-				% if to opponent, stop sliding
-				board fromIndex toIndex _board_indexFrom_indexTo_AreOpponents_b_ {
-					exit
-				} if
-				
-				% exit if is not a sliding piece
-				(brq) p _p_DupLowerCase_p_ search {
-					% (-- SLIDING PIECE, CONTINUE: ) ==only p == 
-					pop pop pop
-				} {
-					% (-- NOT SLIDING PIECE, EXIT: ) ==only p ==
-					pop
-					exit
-				} ifelse
-				
-				/currentCol toIndex _index_Col_a-h_ def
-				/currentRow toIndex _index_Row_1-8_ def
-										
-			} if
+                % don't go out of board
+                toIndex _index_IsInBoardRange_b_ not {
+                    exit
+                } if
+                
+                % stop moving when over- or under-flowing board edges, including knights
+                /toCol toIndex _index_Col_a-h_ def
+                /toRow toIndex _index_Row_1-8_ def
+                
+                currentCol (a) eq toCol (g) eq and { exit } if
+                currentCol (a) eq toCol (h) eq and { exit } if
+                currentCol (b) eq toCol (h) eq and { exit } if
+                currentRow (1) eq toRow (8) eq and { exit } if
+                currentCol (g) eq toCol (a) eq and { exit } if
+                currentCol (h) eq toCol (a) eq and { exit } if
+                currentCol (h) eq toCol (b) eq and { exit } if
+                currentRow (8) eq toRow (1) eq and { exit } if
+                
+                p (p) eq p (P) eq or {
+                                        
+                    % pawns cannot move sideways if they don't capture, unless it's en-passant
+                    currentCol toCol ne {
+                        
+                        /isEnPassantWhite false def
+                        /whiteEP GameState (EN_PASSANT_WHITE_CANDIDATE) get def
+                        whiteEP null ne {
+                            toRow 3 eq toCol whiteEP _coord_Index_i_ _index_Col_a-h_ eq and {
+                                /isEnPassantWhite true def 
+                            } if
+                        } if
+                        
+                        /isEnPassantBlack false def
+                        /blackEP GameState (EN_PASSANT_BLACK_CANDIDATE) get def
+                        blackEP null ne {
+                            toRow 6 eq toCol blackEP _coord_Index_i_ _index_Col_a-h_ eq and {
+                                /isEnPassantBlack true def 
+                            } if
+                        } if
 
-		} for
-		
-	} forall
-		
-	% castling
-	
-	% castling through checked squares is prevented in _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
-	
-	GameState (BLACK_DID_CASTLE) get not p (k) eq and fromCoord (e8) eq and {
-	 	fromCoord (e8) eq board  4 4 getinterval (k..r)  eq and { legalMoves fromIndex  2 add 1 put } if
-	 	fromCoord (e8) eq board  0 5 getinterval (r...k) eq and { legalMoves fromIndex -2 add 1 put } if
-	} if
+                        /isEnPassant isEnPassantWhite isEnPassantBlack or def
+                        
+                        board fromIndex toIndex _board_indexFrom_indexTo_AreOpponents_b_ not isEnPassant not and {
+                            exit                            
+                        } if
+                    } if
+                    
+                    % pawns cannot move +2 if not on their initial raw and +1 square being free
+                    toRow currentRow sub abs 2 eq {
+                        /pIsWhite p (P) eq def
 
-	GameState (WHITE_DID_CASTLE) get not p (K) eq and fromCoord (e1) eq and {
-	 	fromCoord (e1) eq board 60 4 getinterval (K..R)  eq and { legalMoves fromIndex  2 add 1 put } if
-	 	fromCoord (e1) eq board 56 5 getinterval (R...K) eq and { legalMoves fromIndex -2 add 1 put } if
-	} if
-	
-	%(-- legalMoves: ) ==only legalMoves ==
-	
-	end
-	
-	legalMoves
-	
-	CS_POP
+                        currentRow pIsWhite {2}{7} ifelse ne { exit } if
+                        board fromIndex 8 pIsWhite {sub}{add} ifelse _board_index_Piece_p_ _piece_IsEmpty_b_ not { exit } if                        
+                    } if
+                    
+                    % pawns cannot more forward if square is not empty
+                    currentCol toCol eq {
+                        board toIndex _board_index_Piece_p_ _piece_IsEmpty_b_ not {
+                            exit
+                        } if
+                    } if
+                
+                } if
+                
+                board fromIndex toIndex _board_indexFrom_indexTo_AreSameColor_b_ {
+                    exit
+                } if
+                
+                %(***** add to legal moves: ) ==only toIndex ==
+                legalMoves toIndex 1 put
+                
+                % if to opponent, stop sliding
+                board fromIndex toIndex _board_indexFrom_indexTo_AreOpponents_b_ {
+                    exit
+                } if
+                
+                % exit if is not a sliding piece
+                (brq) p _p_DupLowerCase_p_ search {
+                    % (-- SLIDING PIECE, CONTINUE: ) ==only p == 
+                    pop pop pop
+                } {
+                    % (-- NOT SLIDING PIECE, EXIT: ) ==only p ==
+                    pop
+                    exit
+                } ifelse
+                
+                /currentCol toIndex _index_Col_a-h_ def
+                /currentRow toIndex _index_Row_1-8_ def
+                                        
+            } if
+
+        } for
+        
+    } forall
+        
+    % castling
+    
+    % castling through checked squares is prevented in _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
+    
+    GameState (BLACK_DID_CASTLE) get not p (k) eq and fromCoord (e8) eq and {
+         fromCoord (e8) eq board  4 4 getinterval (k..r)  eq and { legalMoves fromIndex  2 add 1 put } if
+         fromCoord (e8) eq board  0 5 getinterval (r...k) eq and { legalMoves fromIndex -2 add 1 put } if
+    } if
+
+    GameState (WHITE_DID_CASTLE) get not p (K) eq and fromCoord (e1) eq and {
+         fromCoord (e1) eq board 60 4 getinterval (K..R)  eq and { legalMoves fromIndex  2 add 1 put } if
+         fromCoord (e1) eq board 56 5 getinterval (R...K) eq and { legalMoves fromIndex -2 add 1 put } if
+    } if
+    
+    %(-- legalMoves: ) ==only legalMoves ==
+    
+    end
+    
+    legalMoves
+    
+    CS_POP
 } def
 
 /_board_MaterialValue_white_black_ {
-	(/_board_MaterialValue_white_black_) CS_PUT
-	
-	5 dict begin
-	
-	/b exch def
-	/whiteValue 0 def
-	/blackValue 0 def
-	
-	0 1 63 {
-		/i exch def
-		
-		/p b i 1 getinterval def
-		
-		WhitePieceValueDict p known {
-			/whiteValue whiteValue WhitePieceValueDict p get add def
-		} if
+    (/_board_MaterialValue_white_black_) CS_PUT
+    
+    5 dict begin
+    
+    /b exch def
+    /whiteValue 0 def
+    /blackValue 0 def
+    
+    0 1 63 {
+        /i exch def
         
-		BlackPieceValueDict p known {
-			/blackValue blackValue BlackPieceValueDict p get add def
-		} if
-		
-	} for
-	
-	whiteValue
-	blackValue
-	
-	end
-	
-	CS_POP
+        /p b i 1 getinterval def
+        
+        WhitePieceValueDict p known {
+            /whiteValue whiteValue WhitePieceValueDict p get add def
+        } if
+        
+        BlackPieceValueDict p known {
+            /blackValue blackValue BlackPieceValueDict p get add def
+        } if
+        
+    } for
+    
+    whiteValue
+    blackValue
+    
+    end
+    
+    CS_POP
 } def
 
 /_board_fc_tc_dry_Move_canMove_squaresStatus_msg_ {
-	(/_board_fc_tc_dry_Move_canMove_squaresStatus_msg_) CS_PUT
-	
-	/canMove true def
-	/msg (-) def
-	/didActuallyMove false def
-	
-	10 dict begin
-	
-	/isDry exch def
-	/toCoord exch def
-	/fromCoord exch def
-	/brd exch def
-	
-	fromCoord _coord_Index_i_ _index_IsInBoardRange_b_ not
-	toCoord _coord_Index_i_ _index_IsInBoardRange_b_ not or {
-		%(-- coords out of range: ) ==only fromCoord == toCoord ==
+    (/_board_fc_tc_dry_Move_canMove_squaresStatus_msg_) CS_PUT
+    
+    /canMove true def
+    /msg (-) def
+    /didActuallyMove false def
+    
+    10 dict begin
+    
+    /isDry exch def
+    /toCoord exch def
+    /fromCoord exch def
+    /brd exch def
+    
+    fromCoord _coord_Index_i_ _index_IsInBoardRange_b_ not
+    toCoord _coord_Index_i_ _index_IsInBoardRange_b_ not or {
+        %(-- coords out of range: ) ==only fromCoord == toCoord ==
 
-		false % can move
-		64 array % statuses
-		(bad coords) % msg
-		false % didActuallyMove
+        false % can move
+        64 array % statuses
+        (bad coords) % msg
+        false % didActuallyMove
 
-		quit
-	} if
-	
-	/fromPiece brd fromCoord _board_coord_Piece_p_ def
-	/toPiece brd toCoord _board_coord_Piece_p_ def
+        quit
+    } if
+    
+    /fromPiece brd fromCoord _board_coord_Piece_p_ def
+    /toPiece brd toCoord _board_coord_Piece_p_ def
 
-	/fromIndex { fromCoord _coord_Index_i_ } def
-	%fromIndex AssertTypeInt
+    /fromIndex { fromCoord _coord_Index_i_ } def
+    %fromIndex AssertTypeInt
 
-	/toIndex { toCoord _coord_Index_i_ } def
-	%toIndex AssertTypeInt
+    /toIndex { toCoord _coord_Index_i_ } def
+    %toIndex AssertTypeInt
 
-	/a brd fromCoord _board_coord_ValidMoves_a_ def
+    /a brd fromCoord _board_coord_ValidMoves_a_ def
 
-	/i toCoord _coord_Index_i_ def
+    /i toCoord _coord_Index_i_ def
 
-	a fromCoord _coord_Index_i_ 3 put % origin
-	
-	{
-		% if toIndex is not part of valid moves, or fromCoord == toCoord, ...
+    a fromCoord _coord_Index_i_ 3 put % origin
+    
+    {
+        % if toIndex is not part of valid moves, or fromCoord == toCoord, ...
 
-		a i get null eq fromCoord toCoord eq or {
-			/canMove false def
-			/msg (invalid move) def
-			a toCoord _coord_Index_i_ 2 put % 2 is red
-			exit
-		} if
-		
-		GameState (CURRENT_PLAYER) get (white) _a1_a2_HaveEqualContents_b_ fromPiece _piece_IsBlack_b_ and {
-			/canMove false def
-			/msg (ERROR: white turn) def
-			exit
-		} if
-		
-		GameState (CURRENT_PLAYER) get (black) _a1_a2_HaveEqualContents_b_ fromPiece _piece_IsWhite_b_ and {
-			/canMove false def
-			/msg (ERROR: black turn) def
-			exit
-		} if
-		
-		isDry { exit} if
-
-		/futureBoard brd _s_Dup_s_ def
-
-		%----- detect checks
-		
-		% actual move on futureBoard, used to detect checks ahead
-		futureBoard toIndex futureBoard fromCoord _board_coord_Piece_p_ putinterval
-		futureBoard fromIndex (.) putinterval
-		
-		% prevent white from moving when checked
-		fromPiece _piece_IsWhite_b_ futureBoard (white) _board_whiteOrBlack_KingIsChecked_b_ and {
-			/canMove false def
-			/msg (white checked) def
-			a toCoord _coord_Index_i_ 2 put % 2 is red
-			exit
-		} if
-
-		% prevent black from moving when checked
-		fromPiece _piece_IsBlack_b_ futureBoard (black) _board_whiteOrBlack_KingIsChecked_b_ and {
-			/canMove false def
-			/msg (black checked) def
-			a toCoord _coord_Index_i_ 2 put % 2 is red	
-			exit
-		} if
-
-		%----- manage captures
-		
-		/a 64 array def
-		a fromCoord _coord_Index_i_ 3 put % origin
-		a toCoord   _coord_Index_i_ 1 put % destination
-
-		/fromPiece brd fromCoord _board_coord_Piece_p_ def
-		/toPiece   brd toCoord _board_coord_Piece_p_ def
-
-		/doCapture
-			fromPiece _piece_IsBlack_b_ toPiece _piece_IsWhite_b_ and
-			fromPiece _piece_IsWhite_b_ toPiece _piece_IsBlack_b_ and
-			or def
-
-		doCapture {
-			fromPiece _piece_IsBlack_b_ { toPiece GameState (CAPTURED_BY_BLACK) get _p_a_AddToCaptured } if
-			fromPiece _piece_IsWhite_b_ { toPiece GameState (CAPTURED_BY_WHITE) get _p_a_AddToCaptured } if
-		} if
-
-		%----- add 'en passant' moves
-		
-		/fromCol fromCoord _coord_Index_i_ _index_Col_a-h_ def
-		/toCol toCoord _coord_Index_i_ _index_Col_a-h_ def
-		/toRow toCoord _coord_Index_i_ _index_Row_1-8_ def
-		
-		[[(EN_PASSANT_BLACK_CANDIDATE) (CAPTURED_BY_WHITE) (P) 6]
-		 [(EN_PASSANT_WHITE_CANDIDATE) (CAPTURED_BY_BLACK) (p) 4]] {
-		
-			/candidateKey_captureKey_fromPiece exch def
-		
-			/candidateKey candidateKey_captureKey_fromPiece 0 get def
-			/captureKey   candidateKey_captureKey_fromPiece 1 get def
-			/fromPawn     candidateKey_captureKey_fromPiece 2 get def
-			/toRowTarget  candidateKey_captureKey_fromPiece 3 get def
-			
-	 		/candidate GameState candidateKey get def
+        a i get null eq fromCoord toCoord eq or {
+            /canMove false def
+            /msg (invalid move) def
+            a toCoord _coord_Index_i_ 2 put % 2 is red
+            exit
+        } if
         
-	 		candidate null ne fromPiece fromPawn eq and {
+        GameState (CURRENT_PLAYER) get (white) _a1_a2_HaveEqualContents_b_ fromPiece _piece_IsBlack_b_ and {
+            /canMove false def
+            /msg (ERROR: white turn) def
+            exit
+        } if
         
-	 			/candidateCol candidate _coord_Index_i_ _index_Col_a-h_ def
-	 			/candidateRow candidate _coord_Index_i_ _index_Row_1-8_ def
+        GameState (CURRENT_PLAYER) get (black) _a1_a2_HaveEqualContents_b_ fromPiece _piece_IsWhite_b_ and {
+            /canMove false def
+            /msg (ERROR: black turn) def
+            exit
+        } if
         
-	 			candidate 0 get fromCol 0 get sub abs 1 eq
-	 			toRow toRowTarget eq and
-	 			toCol candidateCol eq and {
-				
-	 				brd candidate _board_coord_Piece_p_ GameState captureKey get _p_a_AddToCaptured
-	 				brd candidate _coord_Index_i_ (.) putinterval
+        isDry { exit} if
+
+        /futureBoard brd _s_Dup_s_ def
+
+        %----- detect checks
         
-	 				a fromCoord _coord_Index_i_ 3 put % origin
-	 				a toCoord   _coord_Index_i_ 1 put % destination
-				
-	 			} if
+        % actual move on futureBoard, used to detect checks ahead
+        futureBoard toIndex futureBoard fromCoord _board_coord_Piece_p_ putinterval
+        futureBoard fromIndex (.) putinterval
         
-	 		} if
-	 		
-		} forall
-		
-		%----- prepare en passant candidate for next move
-		
-		GameState (EN_PASSANT_WHITE_CANDIDATE) null put
-		GameState (EN_PASSANT_BLACK_CANDIDATE) null put			
-		
-		fromPiece (p) eq
-		fromCoord _coord_Index_i_ _index_Row_1-8_ 7 eq and
-		toCoord _coord_Index_i_ _index_Row_1-8_ 5 eq and {
-			GameState (EN_PASSANT_BLACK_CANDIDATE) toCoord put
-			GameState (EN_PASSANT_WHITE_CANDIDATE) null put
-		} if
+        % prevent white from moving when checked
+        fromPiece _piece_IsWhite_b_ futureBoard (white) _board_whiteOrBlack_KingIsChecked_b_ and {
+            /canMove false def
+            /msg (white checked) def
+            a toCoord _coord_Index_i_ 2 put % 2 is red
+            exit
+        } if
 
-		fromPiece (P) eq
-		fromCoord _coord_Index_i_ _index_Row_1-8_ 2 eq and
-		toCoord _coord_Index_i_ _index_Row_1-8_ 4 eq and {
-			GameState (EN_PASSANT_WHITE_CANDIDATE) toCoord put
-			GameState (EN_PASSANT_BLACK_CANDIDATE) null put
-		} if
-		
-		%----- castling
-		
-		% TODO: refactor..
-		
-		GameState (BLACK_DID_CASTLE) get not fromPiece (k) eq and fromCoord (e8) eq and toCoord (c8) eq and {
-			brd (black) [2 3 4] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
-				brd  0 (..kr) putinterval
-				GameState (BLACK_DID_CASTLE) true put	
-			} {
-				/canMove false def
-				/msg (ERR: black checked) def
-				exit					
-			} ifelse
-		} if
-		
-		GameState (BLACK_DID_CASTLE) get not fromPiece (k) eq and fromCoord (e8) eq and toCoord (g8) eq and {
-			brd (black) [4 5 6] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
-				brd  4 (rk..) putinterval
-				GameState (BLACK_DID_CASTLE) true put
-			} {
-				/canMove false def
-				/msg (ERR: black checked) def
-				exit					
-			} ifelse
-		} if
-		
-		GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (g1) eq and {
-			brd (white) [60 61 62] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
-				brd 60 (.RK.) putinterval
-				GameState (BLACK_DID_CASTLE) true put
-			} {
-				/canMove false def
-				/msg (ERR: white checked) def
-				exit					
-			} ifelse
-		} if
-		
-		GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (c1) eq and {
-			brd (white) [58 59 60] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
-				brd 56 (..KR) putinterval
-				GameState (BLACK_DID_CASTLE) true put
-			} {
-				/canMove false def
-				/msg (ERR: white checked) def
-				exit					
-			} ifelse
-		} if
+        % prevent black from moving when checked
+        fromPiece _piece_IsBlack_b_ futureBoard (black) _board_whiteOrBlack_KingIsChecked_b_ and {
+            /canMove false def
+            /msg (black checked) def
+            a toCoord _coord_Index_i_ 2 put % 2 is red    
+            exit
+        } if
 
-		%----- actual move on actual board
-		
-		/p GameState (BOARD) get fromCoord _board_coord_Piece_p_ def
-		brd toIndex p putinterval
-		brd fromIndex (.) putinterval
-
-		%----- pawn promotion
-		
-		/toPiece brd toCoord _board_coord_Piece_p_ def
-
-		toPiece (P) eq toIndex _index_Row_1-8_ 8 eq and {
-			brd toIndex (Q) putinterval
-		} if
-
-		toPiece (p) eq toIndex _index_Row_1-8_ 1 eq and {
-			brd toIndex (q) putinterval
-		} if
-
-		/didActuallyMove true def
-		
-		GameState (BOARD) brd _s_Dup_s_ put
-
-		%----- update ENDING_HAS_BEGUN flag
-
-		% The ending begins if:
-		% 1. Both sides have no queens or
-		% 2. Every side which has a queen has additionally no other pieces or one minorpiece maximum.
-		
-		/whiteQueenOnBoard brd (Q) _board_piece_PieceIndex_i_ null ne def
-		/blackQueenOnBoard brd (q) _board_piece_PieceIndex_i_ null ne def
+        %----- manage captures
         
-		/noMoreQueens whiteQueenOnBoard not blackQueenOnBoard not and def
-		
-		brd _board_MaterialValue_white_black_
-		
-		/blackValue exch def
-		/whiteValue exch def
-				
-		/endingHasBegun
-			whiteQueenOnBoard 21000 whiteValue le and
-			blackQueenOnBoard 21000 blackValue le and or
-			noMoreQueens or def
-		
-		GameState (ENDING_HAS_BEGUN) endingHasBegun put
-		
-		exit
-		
-	} loop
+        /a 64 array def
+        a fromCoord _coord_Index_i_ 3 put % origin
+        a toCoord   _coord_Index_i_ 1 put % destination
 
-	didActuallyMove {
-		/s (           ) def
-		s 0 GameState (CURRENT_PLAYER) get putinterval
-		s 6 fromCoord putinterval
-		s 9 toCoord putinterval
-		GameState (LAST_MOVE) s put
-	} {
-		/s (          ) def
-		s 5 fromCoord putinterval
-		s 8 toCoord putinterval
-		GameState (LAST_MOVE) s put
-	} ifelse
-	
-	GameState (LAST_MESSAGE) msg put
-	
-	canMove
-	a
-	msg
-	didActuallyMove
-	
-	end
-	
-	% didActuallyMove
-	{ ChangePlayer_playerColor_ pop } if
+        /fromPiece brd fromCoord _board_coord_Piece_p_ def
+        /toPiece   brd toCoord _board_coord_Piece_p_ def
 
-	/playerTurnMessage (                        ) def
-	playerTurnMessage 0 (xxxxx turn) putinterval
-	playerTurnMessage 0 GameState (CURRENT_PLAYER) get putinterval		
-	GameState (PLAYER_TURN_MESSAGE) playerTurnMessage put
-	
-	CS_POP
+        /doCapture
+            fromPiece _piece_IsBlack_b_ toPiece _piece_IsWhite_b_ and
+            fromPiece _piece_IsWhite_b_ toPiece _piece_IsBlack_b_ and
+            or def
+
+        doCapture {
+            fromPiece _piece_IsBlack_b_ { toPiece GameState (CAPTURED_BY_BLACK) get _p_a_AddToCaptured } if
+            fromPiece _piece_IsWhite_b_ { toPiece GameState (CAPTURED_BY_WHITE) get _p_a_AddToCaptured } if
+        } if
+
+        %----- add 'en passant' moves
+        
+        /fromCol fromCoord _coord_Index_i_ _index_Col_a-h_ def
+        /toCol toCoord _coord_Index_i_ _index_Col_a-h_ def
+        /toRow toCoord _coord_Index_i_ _index_Row_1-8_ def
+        
+        [[(EN_PASSANT_BLACK_CANDIDATE) (CAPTURED_BY_WHITE) (P) 6]
+         [(EN_PASSANT_WHITE_CANDIDATE) (CAPTURED_BY_BLACK) (p) 4]] {
+        
+            /candidateKey_captureKey_fromPiece exch def
+        
+            /candidateKey candidateKey_captureKey_fromPiece 0 get def
+            /captureKey   candidateKey_captureKey_fromPiece 1 get def
+            /fromPawn     candidateKey_captureKey_fromPiece 2 get def
+            /toRowTarget  candidateKey_captureKey_fromPiece 3 get def
+            
+             /candidate GameState candidateKey get def
+        
+             candidate null ne fromPiece fromPawn eq and {
+        
+                 /candidateCol candidate _coord_Index_i_ _index_Col_a-h_ def
+                 /candidateRow candidate _coord_Index_i_ _index_Row_1-8_ def
+        
+                 candidate 0 get fromCol 0 get sub abs 1 eq
+                 toRow toRowTarget eq and
+                 toCol candidateCol eq and {
+                
+                     brd candidate _board_coord_Piece_p_ GameState captureKey get _p_a_AddToCaptured
+                     brd candidate _coord_Index_i_ (.) putinterval
+        
+                     a fromCoord _coord_Index_i_ 3 put % origin
+                     a toCoord   _coord_Index_i_ 1 put % destination
+                
+                 } if
+        
+             } if
+             
+        } forall
+        
+        %----- prepare en passant candidate for next move
+        
+        GameState (EN_PASSANT_WHITE_CANDIDATE) null put
+        GameState (EN_PASSANT_BLACK_CANDIDATE) null put            
+        
+        fromPiece (p) eq
+        fromCoord _coord_Index_i_ _index_Row_1-8_ 7 eq and
+        toCoord _coord_Index_i_ _index_Row_1-8_ 5 eq and {
+            GameState (EN_PASSANT_BLACK_CANDIDATE) toCoord put
+            GameState (EN_PASSANT_WHITE_CANDIDATE) null put
+        } if
+
+        fromPiece (P) eq
+        fromCoord _coord_Index_i_ _index_Row_1-8_ 2 eq and
+        toCoord _coord_Index_i_ _index_Row_1-8_ 4 eq and {
+            GameState (EN_PASSANT_WHITE_CANDIDATE) toCoord put
+            GameState (EN_PASSANT_BLACK_CANDIDATE) null put
+        } if
+        
+        %----- castling
+        
+        % TODO: refactor..
+        
+        GameState (BLACK_DID_CASTLE) get not fromPiece (k) eq and fromCoord (e8) eq and toCoord (c8) eq and {
+            brd (black) [2 3 4] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
+                brd  0 (..kr) putinterval
+                GameState (BLACK_DID_CASTLE) true put    
+            } {
+                /canMove false def
+                /msg (ERR: black checked) def
+                exit                    
+            } ifelse
+        } if
+        
+        GameState (BLACK_DID_CASTLE) get not fromPiece (k) eq and fromCoord (e8) eq and toCoord (g8) eq and {
+            brd (black) [4 5 6] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
+                brd  4 (rk..) putinterval
+                GameState (BLACK_DID_CASTLE) true put
+            } {
+                /canMove false def
+                /msg (ERR: black checked) def
+                exit                    
+            } ifelse
+        } if
+        
+        GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (g1) eq and {
+            brd (white) [60 61 62] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
+                brd 60 (.RK.) putinterval
+                GameState (BLACK_DID_CASTLE) true put
+            } {
+                /canMove false def
+                /msg (ERR: white checked) def
+                exit                    
+            } ifelse
+        } if
+        
+        GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (c1) eq and {
+            brd (white) [58 59 60] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
+                brd 56 (..KR) putinterval
+                GameState (BLACK_DID_CASTLE) true put
+            } {
+                /canMove false def
+                /msg (ERR: white checked) def
+                exit                    
+            } ifelse
+        } if
+
+        %----- actual move on actual board
+        
+        /p GameState (BOARD) get fromCoord _board_coord_Piece_p_ def
+        brd toIndex p putinterval
+        brd fromIndex (.) putinterval
+
+        %----- pawn promotion
+        
+        /toPiece brd toCoord _board_coord_Piece_p_ def
+
+        toPiece (P) eq toIndex _index_Row_1-8_ 8 eq and {
+            brd toIndex (Q) putinterval
+        } if
+
+        toPiece (p) eq toIndex _index_Row_1-8_ 1 eq and {
+            brd toIndex (q) putinterval
+        } if
+
+        /didActuallyMove true def
+        
+        GameState (BOARD) brd _s_Dup_s_ put
+
+        %----- update ENDING_HAS_BEGUN flag
+
+        % The ending begins if:
+        % 1. Both sides have no queens or
+        % 2. Every side which has a queen has additionally no other pieces or one minorpiece maximum.
+        
+        /whiteQueenOnBoard brd (Q) _board_piece_PieceIndex_i_ null ne def
+        /blackQueenOnBoard brd (q) _board_piece_PieceIndex_i_ null ne def
+        
+        /noMoreQueens whiteQueenOnBoard not blackQueenOnBoard not and def
+        
+        brd _board_MaterialValue_white_black_
+        
+        /blackValue exch def
+        /whiteValue exch def
+                
+        /endingHasBegun
+            whiteQueenOnBoard 21000 whiteValue le and
+            blackQueenOnBoard 21000 blackValue le and or
+            noMoreQueens or def
+        
+        GameState (ENDING_HAS_BEGUN) endingHasBegun put
+        
+        exit
+        
+    } loop
+
+    didActuallyMove {
+        /s (           ) def
+        s 0 GameState (CURRENT_PLAYER) get putinterval
+        s 6 fromCoord putinterval
+        s 9 toCoord putinterval
+        GameState (LAST_MOVE) s put
+    } {
+        /s (          ) def
+        s 5 fromCoord putinterval
+        s 8 toCoord putinterval
+        GameState (LAST_MOVE) s put
+    } ifelse
+    
+    GameState (LAST_MESSAGE) msg put
+    
+    canMove
+    a
+    msg
+    didActuallyMove
+    
+    end
+    
+    % didActuallyMove
+    { ChangePlayer_playerColor_ pop } if
+
+    /playerTurnMessage (                        ) def
+    playerTurnMessage 0 (xxxxx turn) putinterval
+    playerTurnMessage 0 GameState (CURRENT_PLAYER) get putinterval        
+    GameState (PLAYER_TURN_MESSAGE) playerTurnMessage put
+    
+    CS_POP
 } def
 
 /_board_whiteOrBlack_LegalMoves_d_ {
-	(/_board_whiteOrBlack_LegalMoves_d_) CS_PUT
+    (/_board_whiteOrBlack_LegalMoves_d_) CS_PUT
 
-	% returns a dict such as {(a2): [null 1 1 null ...], }
-	
-	15 dict begin
-	
-	/whiteOrBlack exch def
-	/board exch def
+    % returns a dict such as {(a2): [null 1 1 null ...], }
+    
+    15 dict begin
+    
+    /whiteOrBlack exch def
+    /board exch def
 
-	/legalMovesDict << >> def
+    /legalMovesDict << >> def
 
-	whiteOrBlack (black) eq not whiteOrBlack (white) eq not and {
-		(-- bad param, need 'white' or 'black') == quit
-	} if
-	
-	/whiteTrueBlackFalse whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ def
+    whiteOrBlack (black) eq not whiteOrBlack (white) eq not and {
+        (-- bad param, need 'white' or 'black') == quit
+    } if
+    
+    /whiteTrueBlackFalse whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ def
 
-	% iterate board
-	0 1 63 {
-		/i exch def
+    % iterate board
+    0 1 63 {
+        /i exch def
 
-		% for each piece
-		/p board i 1 getinterval def
+        % for each piece
+        /p board i 1 getinterval def
 
-		/fc i _index_Coord_c_ def
-		
-		% if piece has the color we're looking for
-		p _piece_IsWhite_b_ whiteTrueBlackFalse and
-		p _piece_IsBlack_b_ whiteTrueBlackFalse not and
-		or {
-			/moves board fc _board_coord_ValidMoves_a_ def
+        /fc i _index_Coord_c_ def
+        
+        % if piece has the color we're looking for
+        p _piece_IsWhite_b_ whiteTrueBlackFalse and
+        p _piece_IsBlack_b_ whiteTrueBlackFalse not and
+        or {
+            /moves board fc _board_coord_ValidMoves_a_ def
 
-			moves {
-				
-				% move on stack
-				1 eq {
-					legalMovesDict fc moves put
-					exit
-				} if
-				
-			} forall
-			
-		} if
-	} for
+            moves {
+                
+                % move on stack
+                1 eq {
+                    legalMovesDict fc moves put
+                    exit
+                } if
+                
+            } forall
+            
+        } if
+    } for
 
-	legalMovesDict
-	
-%	(legalMoves:) ==
-%	legalMoves {
-%		/v exch def
-%		/k exch def
-%		(    k:) ==only k ==
-%		(    v:) ==only v ==
-%	} forall
+    legalMovesDict
+    
+%    (legalMoves:) ==
+%    legalMoves {
+%        /v exch def
+%        /k exch def
+%        (    k:) ==only k ==
+%        (    v:) ==only v ==
+%    } forall
 
-	end
-	
-	CS_POP
+    end
+    
+    CS_POP
 } def
 
 /_whiteOrBlack_Invert_s_ {
-	(/_whiteOrBlack_Invert_s_) CS_PUT
-	
-	/wb exch def
-	
-	{
-		wb (white) eq { (black) exit } if
-		wb (black) eq { (white) exit } if
-		(-- bad param, need 'white' or 'black') == quit		
-	} loop
-	
-	CS_POP
+    (/_whiteOrBlack_Invert_s_) CS_PUT
+    
+    /wb exch def
+    
+    {
+        wb (white) eq { (black) exit } if
+        wb (black) eq { (white) exit } if
+        (-- bad param, need 'white' or 'black') == quit        
+    } loop
+    
+    CS_POP
 } def
 
 /_board_whiteOrBlack_index_IndexIsChecked_b_ {
-	% tells if a square is checked from player perspective
-	(/_board_whiteOrBlack_index_IndexIsChecked_b_) CS_PUT
-	
-	5 dict begin
-	
-	/idx exch def
-	/whiteOrBlack exch def
-	/board exch def
+    % tells if a square is checked from player perspective
+    (/_board_whiteOrBlack_index_IndexIsChecked_b_) CS_PUT
+    
+    5 dict begin
+    
+    /idx exch def
+    /whiteOrBlack exch def
+    /board exch def
 
-	%board ==
-	%whiteOrBlack ==
-	%[idx] ==
-	
-	board whiteOrBlack [ idx ] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_
-	
-	end
-	
-	CS_POP
+    %board ==
+    %whiteOrBlack ==
+    %[idx] ==
+    
+    board whiteOrBlack [ idx ] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_
+    
+    end
+    
+    CS_POP
 } def
 
 /_board_whiteOrBlack_indices_IndicesContainOneChecked_b_ {
-	(/_board_whiteOrBlack_indices_IndicesContainOneChecked_b_) CS_PUT
-	
-	10 dict begin
-	
-	/indices exch def
-	/whiteOrBlack exch def
-	/board exch def
+    (/_board_whiteOrBlack_indices_IndicesContainOneChecked_b_) CS_PUT
+    
+    10 dict begin
+    
+    /indices exch def
+    /whiteOrBlack exch def
+    /board exch def
 
-	whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ not whiteOrBlack (black) _a1_a2_HaveEqualContents_b_ not and {
-		(-- bad param, need 'white' or 'black') == quit
-	} if
-	
-	/opponentMovesDict board whiteOrBlack _whiteOrBlack_Invert_s_ _board_whiteOrBlack_LegalMoves_d_ def
+    whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ not whiteOrBlack (black) _a1_a2_HaveEqualContents_b_ not and {
+        (-- bad param, need 'white' or 'black') == quit
+    } if
+    
+    /opponentMovesDict board whiteOrBlack _whiteOrBlack_Invert_s_ _board_whiteOrBlack_LegalMoves_d_ def
 
-	/indicesContainOneChecked false def
-	
-	opponentMovesDict {
-		/v exch def
-		/k exch def
+    /indicesContainOneChecked false def
+    
+    opponentMovesDict {
+        /v exch def
+        /k exch def
 
-		indices {
-			/ii exch def
-			
-			v ii get 1 eq {
-				/indicesContainOneChecked true def
-				exit exit
-			} if
-			
-		} forall 
+        indices {
+            /ii exch def
+            
+            v ii get 1 eq {
+                /indicesContainOneChecked true def
+                exit exit
+            } if
+            
+        } forall 
 
-	} forall
-			
-	indicesContainOneChecked
-	
-	end
-	
-	CS_POP
+    } forall
+            
+    indicesContainOneChecked
+    
+    end
+    
+    CS_POP
 } def
 
 /_board_whiteOrBlack_KingIsChecked_b_ {
-	(/_board_whiteOrBlack_KingIsChecked_b_) CS_PUT
+    (/_board_whiteOrBlack_KingIsChecked_b_) CS_PUT
 
-	5 dict begin
+    5 dict begin
 
-	/whiteOrBlack exch def
-	/board exch def
+    /whiteOrBlack exch def
+    /board exch def
 
-	whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ not whiteOrBlack (black) _a1_a2_HaveEqualContents_b_ not and {
-		(-- bad param, need 'white' or 'black') == quit
-	} if
+    whiteOrBlack (white) _a1_a2_HaveEqualContents_b_ not whiteOrBlack (black) _a1_a2_HaveEqualContents_b_ not and {
+        (-- bad param, need 'white' or 'black') == quit
+    } if
 
-	/ownKing whiteOrBlack (white) _a1_a2_HaveEqualContents_b_{(K)}{(k)}ifelse def
-	/ownKingIndex { board ownKing _board_piece_PieceIndex_i_ } def
-	
-	ownKingIndex null ne {
-		board whiteOrBlack ownKingIndex _board_whiteOrBlack_index_IndexIsChecked_b_
-	} {
-		%(WARNING: ) =only whiteOrBlack =only ( king not found) =
-		false
-	}
-	ifelse
-		
-	end
-		
-	CS_POP
+    /ownKing whiteOrBlack (white) _a1_a2_HaveEqualContents_b_{(K)}{(k)}ifelse def
+    /ownKingIndex { board ownKing _board_piece_PieceIndex_i_ } def
+    
+    ownKingIndex null ne {
+        board whiteOrBlack ownKingIndex _board_whiteOrBlack_index_IndexIsChecked_b_
+    } {
+        %(WARNING: ) =only whiteOrBlack =only ( king not found) =
+        false
+    }
+    ifelse
+        
+    end
+        
+    CS_POP
 } def
 
 % https://www.chessprogramming.org/Simplified_Evaluation_Function
 /WhitePieceValueDict
 <<
-	(P) 100
-	(N) 320
-	(B) 330
-	(R) 500
-	(Q) 900
-	(K) 20000
-	(.) 0
+    (P) 100
+    (N) 320
+    (B) 330
+    (R) 500
+    (Q) 900
+    (K) 20000
+    (.) 0
 >> def
 
 /BlackPieceValueDict << >> def
@@ -880,43 +880,43 @@
             5  10  10 -20 -20  10  10   5
             0   0   0   0   0   0   0   0 ]
 
-	(N) [ -50 -40 -30 -30 -30 -30 -40 -50
-		  -40 -20   0   0   0   0 -20 -40
-		  -30   0  10  15  15  10   0 -30
-		  -30   5  15  20  20  15   5 -30
-		  -30   0  15  20  20  15   0 -30
-		  -30   5  10  15  15  10   5 -30
-		  -40 -20   0   5   5   0 -20 -40
-		  -50 -40 -30 -30 -30 -30 -40 -50 ]
+    (N) [ -50 -40 -30 -30 -30 -30 -40 -50
+          -40 -20   0   0   0   0 -20 -40
+          -30   0  10  15  15  10   0 -30
+          -30   5  15  20  20  15   5 -30
+          -30   0  15  20  20  15   0 -30
+          -30   5  10  15  15  10   5 -30
+          -40 -20   0   5   5   0 -20 -40
+          -50 -40 -30 -30 -30 -30 -40 -50 ]
 
-	(B) [ -20 -10 -10 -10 -10 -10 -10 -20
-		  -10   0   0   0   0   0   0 -10
-		  -10   0   5  10  10   5   0 -10
-		  -10   5   5  10  10   5   5 -10
-		  -10   0  10  10  10  10   0 -10
-		  -10  10  10  10  10  10  10 -10
-		  -10   5   0   0   0   0   5 -10
-		  -20 -10 -10 -10 -10 -10 -10 -20 ]
-	
-	(R) [   0   0   0   0   0   0   0   0
-		    5  10  10  10  10  10  10   5
-		   -5   0   0   0   0   0   0  -5
-		   -5   0   0   0   0   0   0  -5
-		   -5   0   0   0   0   0   0  -5
-		   -5   0   0   0   0   0   0  -5
-		   -5   0   0   0   0   0   0  -5
-		    0   0   0   5   5   0   0   0 ]
+    (B) [ -20 -10 -10 -10 -10 -10 -10 -20
+          -10   0   0   0   0   0   0 -10
+          -10   0   5  10  10   5   0 -10
+          -10   5   5  10  10   5   5 -10
+          -10   0  10  10  10  10   0 -10
+          -10  10  10  10  10  10  10 -10
+          -10   5   0   0   0   0   5 -10
+          -20 -10 -10 -10 -10 -10 -10 -20 ]
+    
+    (R) [   0   0   0   0   0   0   0   0
+            5  10  10  10  10  10  10   5
+           -5   0   0   0   0   0   0  -5
+           -5   0   0   0   0   0   0  -5
+           -5   0   0   0   0   0   0  -5
+           -5   0   0   0   0   0   0  -5
+           -5   0   0   0   0   0   0  -5
+            0   0   0   5   5   0   0   0 ]
 
-	(Q) [ -20 -10 -10  -5  -5 -10 -10 -20
-		  -10   0   0   0   0   0   0 -10
-		  -10   0   5   5   5   5   0 -10
-		   -5   0   5   5   5   5   0  -5
-		    0   0   5   5   5   5   0  -5
-		  -10   5   5   5   5   5   0 -10
-		  -10   0   5   0   0   0   0 -10
-		  -20 -10 -10  -5  -5 -10 -10 -20 ]
+    (Q) [ -20 -10 -10  -5  -5 -10 -10 -20
+          -10   0   0   0   0   0   0 -10
+          -10   0   5   5   5   5   0 -10
+           -5   0   5   5   5   5   0  -5
+            0   0   5   5   5   5   0  -5
+          -10   5   5   5   5   5   0 -10
+          -10   0   5   0   0   0   0 -10
+          -20 -10 -10  -5  -5 -10 -10 -20 ]
 
-	(K) [ -30 -40 -40 -50 -50 -40 -40 -30
+    (K) [ -30 -40 -40 -50 -50 -40 -40 -30
           -30 -40 -40 -50 -50 -40 -40 -30
           -30 -40 -40 -50 -50 -40 -40 -30
           -30 -40 -40 -50 -50 -40 -40 -30
@@ -925,417 +925,417 @@
            20  20   0   0   0   0  20  20
            20  30  10   0   0  10  30  20 ]
 
-	% used for king at the end of the game
-	(X) [ -50 -40 -30 -20 -20 -30 -40 -50
-		  -30 -20 -10   0   0 -10 -20 -30
-		  -30 -10  20  30  30  20 -10 -30
-		  -30 -10  30  40  40  30 -10 -30
-		  -30 -10  30  40  40  30 -10 -30
-		  -30 -10  20  30  30  20 -10 -30
-		  -30 -30   0   0   0   0 -30 -30
-		  -50 -30 -30 -30 -30 -30 -30 -50 ]
+    % used for king at the end of the game
+    (X) [ -50 -40 -30 -20 -20 -30 -40 -50
+          -30 -20 -10   0   0 -10 -20 -30
+          -30 -10  20  30  30  20 -10 -30
+          -30 -10  30  40  40  30 -10 -30
+          -30 -10  30  40  40  30 -10 -30
+          -30 -10  20  30  30  20 -10 -30
+          -30 -30   0   0   0   0 -30 -30
+          -50 -30 -30 -30 -30 -30 -30 -50 ]
 >> def
 
 /BlackPieceSquareDict <<>> def
 
 /initPiecesDicts {
-	(/initPieceSquareDicts) CS_PUT
+    (/initPieceSquareDicts) CS_PUT
 
-	WhitePieceValueDict {
-		/v exch def
-		/k exch def
-		BlackPieceValueDict k ( ) cvs _p_DupLowerCase_p_ v put
-	} forall
+    WhitePieceValueDict {
+        /v exch def
+        /k exch def
+        BlackPieceValueDict k ( ) cvs _p_DupLowerCase_p_ v put
+    } forall
 
-	WhitePieceSquareDict {
-		/v exch def
-		/k exch def
-		
-		BlackPieceSquareDict k ( ) cvs _p_DupLowerCase_p_ v _a_DupReversed_a_ put
-	} forall
-	
-	CS_POP
+    WhitePieceSquareDict {
+        /v exch def
+        /k exch def
+        
+        BlackPieceSquareDict k ( ) cvs _p_DupLowerCase_p_ v _a_DupReversed_a_ put
+    } forall
+    
+    CS_POP
 } def
 
 initPiecesDicts
 
 /_b_Eval_score_ {
-	(/_b_Eval_score_) CS_PUT
+    (/_b_Eval_score_) CS_PUT
 
-	/b exch def
-	
-	5 dict begin
-	
-	/totalScore 0 def
-	
-	0 1 63 {
-		/i exch def
-		
-		/p b i 1 getinterval def
-		
-		GameState (ENDING_HAS_BEGUN) get {
-			p (k) eq { /p (x) def } if
-			p (K) eq { /p (X) def } if
-		} if
-		
-		p (.) ne {
-			%(-- p: ) =only p =only ( i: ) =only i ==
+    /b exch def
+    
+    5 dict begin
+    
+    /totalScore 0 def
+    
+    0 1 63 {
+        /i exch def
+        
+        /p b i 1 getinterval def
+        
+        GameState (ENDING_HAS_BEGUN) get {
+            p (k) eq { /p (x) def } if
+            p (K) eq { /p (X) def } if
+        } if
+        
+        p (.) ne {
+            %(-- p: ) =only p =only ( i: ) =only i ==
 
-			/whiteValueScore  WhitePieceValueDict  p known { WhitePieceValueDict  p get       } { 0 } ifelse def
-			/whiteSquareScore WhitePieceSquareDict p known { WhitePieceSquareDict p get i get } { 0 } ifelse def
+            /whiteValueScore  WhitePieceValueDict  p known { WhitePieceValueDict  p get       } { 0 } ifelse def
+            /whiteSquareScore WhitePieceSquareDict p known { WhitePieceSquareDict p get i get } { 0 } ifelse def
 
-			/blackValueScore  BlackPieceValueDict  p known { BlackPieceValueDict  p get       } { 0 } ifelse def
-			/blackSquareScore BlackPieceSquareDict p known { BlackPieceSquareDict p get i get } { 0 } ifelse def
-			
-			/totalScore totalScore whiteValueScore add whiteSquareScore add blackValueScore sub blackSquareScore sub def
-		} if
-				
-	} for
-	
-	totalScore
-	
-	end
+            /blackValueScore  BlackPieceValueDict  p known { BlackPieceValueDict  p get       } { 0 } ifelse def
+            /blackSquareScore BlackPieceSquareDict p known { BlackPieceSquareDict p get i get } { 0 } ifelse def
+            
+            /totalScore totalScore whiteValueScore add whiteSquareScore add blackValueScore sub blackSquareScore sub def
+        } if
+                
+    } for
+    
+    totalScore
+    
+    end
 
-	CS_POP
+    CS_POP
 } def
 
 /_player_board_CanPlay_b_ {
-	
-	(/_player_board_CanPlay_b_) CS_PUT
+    
+    (/_player_board_CanPlay_b_) CS_PUT
 
-	/brd exch def
-	/player exch def
-	
-	5 dict begin
+    /brd exch def
+    /player exch def
+    
+    5 dict begin
 
-	/canPlay false def
-	
-	% for all legal moves
-	brd player _board_whiteOrBlack_LegalMoves_d_ {
+    /canPlay false def
+    
+    % for all legal moves
+    brd player _board_whiteOrBlack_LegalMoves_d_ {
 
-		/v exch def
-		/k exch def
+        /v exch def
+        /k exch def
 
-		/fromCoord k (  ) cvs def
-	
-		/movesList v _movesIntsOrNulls_MovesList_a_ def
-	
-		movesList {
-			/i exch def
-			/toCoord i _index_Coord_c_ def
-		
-			% evaluate move on futureBoard
-			/futureBoard brd _s_Dup_s_ def
-			/p futureBoard fromCoord _board_coord_Piece_p_ def
-			futureBoard i p putinterval
-			futureBoard fromCoord _coord_Index_i_ (.) putinterval
-		
-			% can go there if not checked
-			futureBoard player _board_whiteOrBlack_KingIsChecked_b_ not {
+        /fromCoord k (  ) cvs def
+    
+        /movesList v _movesIntsOrNulls_MovesList_a_ def
+    
+        movesList {
+            /i exch def
+            /toCoord i _index_Coord_c_ def
+        
+            % evaluate move on futureBoard
+            /futureBoard brd _s_Dup_s_ def
+            /p futureBoard fromCoord _board_coord_Piece_p_ def
+            futureBoard i p putinterval
+            futureBoard fromCoord _coord_Index_i_ (.) putinterval
+        
+            % can go there if not checked
+            futureBoard player _board_whiteOrBlack_KingIsChecked_b_ not {
 
-				/canPlay true def
-				
-			} if
+                /canPlay true def
+                
+            } if
 
-			canPlay { exit } if		
-		
-		} forall
-		
-		canPlay { exit } if
+            canPlay { exit } if        
+        
+        } forall
+        
+        canPlay { exit } if
 
-	} forall
+    } forall
 
-	canPlay
-	
-	end
-	
-	CS_POP
+    canPlay
+    
+    end
+    
+    CS_POP
 } def
 
 /_player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_ {
-	% returns {(a2a3):55, ..}
-	
-	(/_player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_) CS_PUT
+    % returns {(a2a3):55, ..}
+    
+    (/_player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_) CS_PUT
 
-	/brd exch def
-	/player exch def
+    /brd exch def
+    /player exch def
 
-	/movesAndScores << >> def
-	
-	5 dict begin
-	
-	/whiteArePlaying player (white) eq def
-	
-	% for all legal moves
-	/m brd player _board_whiteOrBlack_LegalMoves_d_ def
-	
-	/highestScore -1000000 def
-	/lowestScore 1000000 def
-	/highestMove null def
-	/lowestMove null def
-		
-	m {
-		/v exch def
-		/k exch def
+    /movesAndScores << >> def
+    
+    5 dict begin
+    
+    /whiteArePlaying player (white) eq def
+    
+    % for all legal moves
+    /m brd player _board_whiteOrBlack_LegalMoves_d_ def
+    
+    /highestScore -1000000 def
+    /lowestScore 1000000 def
+    /highestMove null def
+    /lowestMove null def
+        
+    m {
+        /v exch def
+        /k exch def
 
-		/fromCoord k (  ) cvs def
-	
-		/movesList v _movesIntsOrNulls_MovesList_a_ def
-	
-		movesList {
-			/i exch def
-			/toCoord i _index_Coord_c_ def
-		
-			% evaluate move on futureBoard
-			/futureBoard brd _s_Dup_s_ def
-			/p futureBoard fromCoord _board_coord_Piece_p_ def
-			futureBoard i p putinterval
-			futureBoard fromCoord _coord_Index_i_ (.) putinterval
-		
-			% can go there if not checked
-			futureBoard player _board_whiteOrBlack_KingIsChecked_b_ not {
+        /fromCoord k (  ) cvs def
+    
+        /movesList v _movesIntsOrNulls_MovesList_a_ def
+    
+        movesList {
+            /i exch def
+            /toCoord i _index_Coord_c_ def
+        
+            % evaluate move on futureBoard
+            /futureBoard brd _s_Dup_s_ def
+            /p futureBoard fromCoord _board_coord_Piece_p_ def
+            futureBoard i p putinterval
+            futureBoard fromCoord _coord_Index_i_ (.) putinterval
+        
+            % can go there if not checked
+            futureBoard player _board_whiteOrBlack_KingIsChecked_b_ not {
 
-				%(-- not checked: ) =only fromCoord =only ( ) =only toCoord ==
-				%(-- futureBoard: ) =only futureBoard ==
-				% eval future_board
-				/score futureBoard _b_Eval_score_ def
+                %(-- not checked: ) =only fromCoord =only ( ) =only toCoord ==
+                %(-- futureBoard: ) =only futureBoard ==
+                % eval future_board
+                /score futureBoard _b_Eval_score_ def
 
-				/move (    ) def
-				move 0 fromCoord putinterval
-				move 2 toCoord putinterval
-				
-				movesAndScores move score put
-				
-				%(move: ) =only move ==
-				score highestScore gt {
-					/highestScore score def
-					/highestMove move _s_Dup_s_ def
-				} if
-				
-				score lowestScore lt {
-					/lowestScore score def
-					/lowestMove move _s_Dup_s_ def
-				} if
+                /move (    ) def
+                move 0 fromCoord putinterval
+                move 2 toCoord putinterval
+                
+                movesAndScores move score put
+                
+                %(move: ) =only move ==
+                score highestScore gt {
+                    /highestScore score def
+                    /highestMove move _s_Dup_s_ def
+                } if
+                
+                score lowestScore lt {
+                    /lowestScore score def
+                    /lowestMove move _s_Dup_s_ def
+                } if
 
-			} if
-		
-		} forall
-		
-	} forall
+            } if
+        
+        } forall
+        
+    } forall
 
-	%(-- highestScore: ) =only ( ) =only highestMove =only ( ) =only highestScore ==
-	%(-- lowestScore: ) =only ( ) =only lowestMove =only ( ) =only lowestScore ==
+    %(-- highestScore: ) =only ( ) =only highestMove =only ( ) =only highestScore ==
+    %(-- lowestScore: ) =only ( ) =only lowestMove =only ( ) =only lowestScore ==
 
-	movesAndScores
-	highestScore
-	highestMove
-	lowestScore
-	lowestMove
-	
-	end
-	
-	CS_POP
+    movesAndScores
+    highestScore
+    highestMove
+    lowestScore
+    lowestMove
+    
+    end
+    
+    CS_POP
 } def
 
 /_player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_ {
-	(/_player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_) CS_PUT
-		
-	/useMinMax exch def
-	/board exch def
-	/player1 exch def
-	
-	5 dict begin
-	
-	%(** PLAYER: ) =only player1 ==
-	
-	% p1 == white
-	% keep p1 move for p2 highest
-	
-	% p1 == black
-	% keep p1 move for p2 lowest	
-	
-	/player2 player1 _whiteOrBlack_Invert_s_ def
-	
-	player1 board _player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_
+    (/_player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_) CS_PUT
+        
+    /useMinMax exch def
+    /board exch def
+    /player1 exch def
+    
+    5 dict begin
+    
+    %(** PLAYER: ) =only player1 ==
+    
+    % p1 == white
+    % keep p1 move for p2 highest
+    
+    % p1 == black
+    % keep p1 move for p2 lowest    
+    
+    /player2 player1 _whiteOrBlack_Invert_s_ def
+    
+    player1 board _player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_
 
-	%(**************** board: ) ==only board _b_Eval_score_ ==
-	%board _board_PrintBoard
-	
-	/lowestMove exch def
-	/lowestEval exch def
-	/highestMove exch def
-	/highestEval exch def
-	/p1Moves exch def
-	
-	/highestEvalMinimized 1000000 def
-	/lowestEvalMaximized -1000000 def
-	/highestPlayer1Move null def
-	/lowestPlayer1Move null def
-	
+    %(**************** board: ) ==only board _b_Eval_score_ ==
+    %board _board_PrintBoard
+    
+    /lowestMove exch def
+    /lowestEval exch def
+    /highestMove exch def
+    /highestEval exch def
+    /p1Moves exch def
+    
+    /highestEvalMinimized 1000000 def
+    /lowestEvalMaximized -1000000 def
+    /highestPlayer1Move null def
+    /lowestPlayer1Move null def
+    
     %(-- min-max start :) =only usertime ==
-	useMinMax {
-		p1Moves {
-			/p1MovesEval exch def
-			/p1Move exch (    ) cvs def
-	
-			%(-- p1Move: ) =only p1Move =only ( , eval: ) =only p1MovesEval ==
-	
-			/p1MoveFrom p1Move 0 2 getinterval def
-			/p1MoveTo   p1Move 2 2 getinterval def
-			
-			/futureBoard board _s_Dup_s_ def
-			/p futureBoard p1MoveFrom _coord_Index_i_ 1 getinterval _s_Dup_s_ def
-			/p2 p _s_Dup_s_ def
-			
-			p (P) eq p1MoveTo _coord_Index_i_ _index_Row_1-8_ 8 eq and { /p2 (Q) def } if
-			p (p) eq p1MoveTo _coord_Index_i_ _index_Row_1-8_ 1 eq and { /p2 (q) def } if
-	
-			futureBoard p1MoveTo _coord_Index_i_ p2 putinterval
-			futureBoard p1MoveFrom _coord_Index_i_ (.) putinterval
-			
-			%(           ********* futureBoard: ) ==only futureBoard _b_Eval_score_ ==
-			%futureBoard _board_PrintBoard
-			
-			player2 futureBoard _player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_
-			
-			/lowestMove2 exch def
-			/lowestEval2 exch def
-			/highestMove2 exch def
-			/highestEval2 exch def
-			/d2 exch def
-			
-			%(--       p2Move, score: ) =only futureBoard _b_Eval_score_ =only ( high: ) =only highestMove2 =only ( highestEval2: ) =only highestEval2 =only (, low: ) =only lowestMove2 =only ( lowestEval2: ) =only lowestEval2 ==
-			
-			% keep the lowest highestEval
-			highestEval2 highestEvalMinimized lt {
-				%(                  **** store highestEvalMinimized ) =only highestEval2 =only ( ) =only p1Move ==
-				/highestEvalMinimized highestEval2 def
-				/highestPlayer1Move p1Move _s_Dup_s_ def
-			} if
-	
-			% keep the highest lowestEval
-			lowestEval2 lowestEvalMaximized gt {
-				%(                  **** store lowestEvalMaximized ) =only lowestEval2 =only ( ) =only p1Move ==
-				/lowestEvalMaximized lowestEval2 def
-				/lowestPlayer1Move p1Move _s_Dup_s_ def
-			} if
-		
-		} forall
-	} {
-		/highestPlayer1Move highestMove def
-		/lowestPlayer1Move lowestMove def
-	} ifelse
+    useMinMax {
+        p1Moves {
+            /p1MovesEval exch def
+            /p1Move exch (    ) cvs def
+    
+            %(-- p1Move: ) =only p1Move =only ( , eval: ) =only p1MovesEval ==
+    
+            /p1MoveFrom p1Move 0 2 getinterval def
+            /p1MoveTo   p1Move 2 2 getinterval def
+            
+            /futureBoard board _s_Dup_s_ def
+            /p futureBoard p1MoveFrom _coord_Index_i_ 1 getinterval _s_Dup_s_ def
+            /p2 p _s_Dup_s_ def
+            
+            p (P) eq p1MoveTo _coord_Index_i_ _index_Row_1-8_ 8 eq and { /p2 (Q) def } if
+            p (p) eq p1MoveTo _coord_Index_i_ _index_Row_1-8_ 1 eq and { /p2 (q) def } if
+    
+            futureBoard p1MoveTo _coord_Index_i_ p2 putinterval
+            futureBoard p1MoveFrom _coord_Index_i_ (.) putinterval
+            
+            %(           ********* futureBoard: ) ==only futureBoard _b_Eval_score_ ==
+            %futureBoard _board_PrintBoard
+            
+            player2 futureBoard _player_board_MovesAndEvals_d_highestEval_highestMove_lowestEval_lowestMove_
+            
+            /lowestMove2 exch def
+            /lowestEval2 exch def
+            /highestMove2 exch def
+            /highestEval2 exch def
+            /d2 exch def
+            
+            %(--       p2Move, score: ) =only futureBoard _b_Eval_score_ =only ( high: ) =only highestMove2 =only ( highestEval2: ) =only highestEval2 =only (, low: ) =only lowestMove2 =only ( lowestEval2: ) =only lowestEval2 ==
+            
+            % keep the lowest highestEval
+            highestEval2 highestEvalMinimized lt {
+                %(                  **** store highestEvalMinimized ) =only highestEval2 =only ( ) =only p1Move ==
+                /highestEvalMinimized highestEval2 def
+                /highestPlayer1Move p1Move _s_Dup_s_ def
+            } if
+    
+            % keep the highest lowestEval
+            lowestEval2 lowestEvalMaximized gt {
+                %(                  **** store lowestEvalMaximized ) =only lowestEval2 =only ( ) =only p1Move ==
+                /lowestEvalMaximized lowestEval2 def
+                /lowestPlayer1Move p1Move _s_Dup_s_ def
+            } if
+        
+        } forall
+    } {
+        /highestPlayer1Move highestMove def
+        /lowestPlayer1Move lowestMove def
+    } ifelse
     %(-- min-max stop :) =only usertime ==
 
-	%
-	
-	/bestFrom null def
-	/bestTo null def
-	
-	player1 (white) _a1_a2_HaveEqualContents_b_ {
-		% white wants to maximize board evaluation
-		% if p1 is white, p1 wants to play the move that, even after black plays, will still maximize the board value 
-		%(*** white best ) =only lowestPlayer1Move ==
-		highestPlayer1Move null ne {
-		    /bestFrom lowestPlayer1Move 0 2 getinterval def
-			/bestTo lowestPlayer1Move 2 2 getinterval def		
-		} if
-		bestTo
-		bestFrom
-		lowestEvalMaximized
-	} {
-		% black want to minimize board evaluation
-		% if p1 is black, p1 wants to play the move that, even after white plays, will still minimize the board value 
-		%(*** black best ) =only highestPlayer1Move ==
-		lowestPlayer1Move null ne {
-		    /bestFrom highestPlayer1Move 0 2 getinterval def
-			/bestTo highestPlayer1Move 2 2 getinterval def		
-		} if
-		bestTo
-		bestFrom
-		highestEvalMinimized	
-	} ifelse
-	
-	end
-	
-	CS_POP
+    %
+    
+    /bestFrom null def
+    /bestTo null def
+    
+    player1 (white) _a1_a2_HaveEqualContents_b_ {
+        % white wants to maximize board evaluation
+        % if p1 is white, p1 wants to play the move that, even after black plays, will still maximize the board value 
+        %(*** white best ) =only lowestPlayer1Move ==
+        highestPlayer1Move null ne {
+            /bestFrom lowestPlayer1Move 0 2 getinterval def
+            /bestTo lowestPlayer1Move 2 2 getinterval def        
+        } if
+        bestTo
+        bestFrom
+        lowestEvalMaximized
+    } {
+        % black want to minimize board evaluation
+        % if p1 is black, p1 wants to play the move that, even after white plays, will still minimize the board value 
+        %(*** black best ) =only highestPlayer1Move ==
+        lowestPlayer1Move null ne {
+            /bestFrom highestPlayer1Move 0 2 getinterval def
+            /bestTo highestPlayer1Move 2 2 getinterval def        
+        } if
+        bestTo
+        bestFrom
+        highestEvalMinimized    
+    } ifelse
+    
+    end
+    
+    CS_POP
 } def
 
 /_player_UpdateGameStateBecauseCannotMove {
-	(/_player_UpdateGameStateBecauseCannotMove) CS_PUT
+    (/_player_UpdateGameStateBecauseCannotMove) CS_PUT
 
-	% assume player cannot move
-	
-	5 dict begin
-	
-	/player exch def
-	 
-	% if player is checked -> mate
-	GameState (BOARD) get player _board_whiteOrBlack_KingIsChecked_b_ {
-		/lastMessage (xxxxx check mate) def
-		/playerTurnMessage (xxxxx win) def
+    % assume player cannot move
+    
+    5 dict begin
+    
+    /player exch def
+     
+    % if player is checked -> mate
+    GameState (BOARD) get player _board_whiteOrBlack_KingIsChecked_b_ {
+        /lastMessage (xxxxx check mate) def
+        /playerTurnMessage (xxxxx win) def
 
-		lastMessage 0 player putinterval
-		playerTurnMessage 0 player _whiteOrBlack_Invert_s_ putinterval
-						
-	} { % else -> draw
-		/lastMessage (xxxxx cannot move) def
-		/playerTurnMessage (stale mate) def
+        lastMessage 0 player putinterval
+        playerTurnMessage 0 player _whiteOrBlack_Invert_s_ putinterval
+                        
+    } { % else -> draw
+        /lastMessage (xxxxx cannot move) def
+        /playerTurnMessage (stale mate) def
 
-		lastMessage 0 player putinterval
+        lastMessage 0 player putinterval
 
-	} ifelse
+    } ifelse
 
-	GameState (LAST_MESSAGE) lastMessage put
-	GameState (PLAYER_TURN_MESSAGE) playerTurnMessage put
-	
-	end
-	
-	CS_POP
+    GameState (LAST_MESSAGE) lastMessage put
+    GameState (PLAYER_TURN_MESSAGE) playerTurnMessage put
+    
+    end
+    
+    CS_POP
 } def
 
 /BlackAutoMoveAndCheckGameState_highlights_gameIsOver_ {
-	(/BlackAutoMoveAndCheckGameState_highlights_gameIsOver_) CS_PUT
-	
-	15 dict begin
-	
-	/gameIsOver false def
-	/highlights 64 array def
-	
-	% look for black best move
-	(black) GameState (BOARD) get true _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
-	/bestScore exch def
-	/bestFrom exch def
-	/bestTo exch def
+    (/BlackAutoMoveAndCheckGameState_highlights_gameIsOver_) CS_PUT
+    
+    15 dict begin
+    
+    /gameIsOver false def
+    /highlights 64 array def
+    
+    % look for black best move
+    (black) GameState (BOARD) get true _player_board_useMinMax_FindBestMove_bestTo_bestFrom_bestScore_
+    /bestScore exch def
+    /bestFrom exch def
+    /bestTo exch def
 
-	%(-- black bestScore:) ==only bestScore ==
-	%(-- black bestFrom:) ==only bestFrom ==
-	%(-- black bestTo:) ==only bestTo ==
-	%()=
+    %(-- black bestScore:) ==only bestScore ==
+    %(-- black bestFrom:) ==only bestFrom ==
+    %(-- black bestTo:) ==only bestTo ==
+    %()=
 
-	% black move if they can
-	bestTo null ne {		
- 	   GameState (BOARD) get bestFrom bestTo false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_						
-	   /msg exch def
-	   /highlights exch def
-	   /canMove exch def
-	} {
-		/gameIsOver true def
-		% update game state if black cannot move
-		(black) _player_UpdateGameStateBecauseCannotMove		
-	} ifelse
-	
-	% check if white can play
-	(white) GameState (BOARD) get _player_board_CanPlay_b_ not {
-		/gameIsOver true def
-		% update game state if white cannot move
-		(white) _player_UpdateGameStateBecauseCannotMove
-	} if
-	
-	highlights % leave on stack
-	gameIsOver % leave on stack
+    % black move if they can
+    bestTo null ne {        
+        GameState (BOARD) get bestFrom bestTo false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_                        
+       /msg exch def
+       /highlights exch def
+       /canMove exch def
+    } {
+        /gameIsOver true def
+        % update game state if black cannot move
+        (black) _player_UpdateGameStateBecauseCannotMove        
+    } ifelse
+    
+    % check if white can play
+    (white) GameState (BOARD) get _player_board_CanPlay_b_ not {
+        /gameIsOver true def
+        % update game state if white cannot move
+        (white) _player_UpdateGameStateBecauseCannotMove
+    } if
+    
+    highlights % leave on stack
+    gameIsOver % leave on stack
 
-	end
-	
-	CS_POP
+    end
+    
+    CS_POP
 } def

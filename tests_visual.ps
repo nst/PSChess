@@ -6,14 +6,14 @@
 (drawing.ps) run
 
 /RunVisualTests {
-	
-	(TESTS) ==
-	
-	10 dict begin
-	
-	NewGame
-	
-	/testBoard (\
+    
+    (TESTS) ==
+    
+    10 dict begin
+    
+    NewGame
+    
+    /testBoard (\
 r...k..K\
 Ppn.p.np\
 kK.b.Q..\
@@ -24,36 +24,36 @@ Bn.PbPnp\
 R...K..R\
 ) def
 
-	(a) 0 get 1 (h) 0 get {
+    (a) 0 get 1 (h) 0 get {
 
-		/col exch def
-		1 1 8 {
-			/row exch def
+        /col exch def
+        1 1 8 {
+            /row exch def
 
-			/fromCoord (  ) def
-			fromCoord 0 col put
-			fromCoord 1 row ( ) cvs putinterval
-		
-			testBoard fromCoord fromCoord true _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
-			
-			/msg exch def
-			/possibleMoves exch def
-			/canMove exch def
-			
-			possibleMoves fromCoord _coord_Index_i_ 3 put % origin in green
-			
-			gsave
-			20 20 translate
-			possibleMoves testBoard _highlightIndices_board_DrawBoard
-			grestore
+            /fromCoord (  ) def
+            fromCoord 0 col put
+            fromCoord 1 row ( ) cvs putinterval
+        
+            testBoard fromCoord fromCoord true _board_fc_tc_dry_Move_canMove_squaresStatus_msg_
+            
+            /msg exch def
+            /possibleMoves exch def
+            /canMove exch def
+            
+            possibleMoves fromCoord _coord_Index_i_ 3 put % origin in green
+            
+            gsave
+            20 20 translate
+            possibleMoves testBoard _highlightIndices_board_DrawBoard
+            grestore
 
-			showpage
+            showpage
 
-		} for
-	} for
-	
-	end
-	
+        } for
+    } for
+    
+    end
+    
 } def
 
 << /PageSize [200 200] >> setpagedevice

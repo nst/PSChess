@@ -9,218 +9,218 @@
 
 /PiecesPathsDict
 <<
-	/m { moveto } bind def
-	/l { lineto } bind def
+    /m { moveto } bind def
+    /l { lineto } bind def
 
     /p { newpath SQUARE_SIZE 2 div SQUARE_SIZE 2 div 4 0 360 arc closepath }
     
     /r { newpath 5 15 m 7 15 l 7 13 l 9 13 l 9 15 l 11 15 l 11 13 l 13 13 l
-		 13 15 l 15 15 l 15 11 l 13 10 l 13 3 l 7 3 l 7 10 l 5 11 l 5 15 l
-		 closepath }
+         13 15 l 15 15 l 15 11 l 13 10 l 13 3 l 7 3 l 7 10 l 5 11 l 5 15 l
+         closepath }
     
     /n { newpath 12 15 m 14 3 l 6 3 l 10 9 l 6 9 l closepath }
-	
-	/b { newpath 14 3 m 12 10 l 10 12 3 -30 30 arc
-		10 12 l 10 12 3 80 210 arc 8 10 l 6 3 l closepath }
-	
-	/q { newpath 4 12 m 8 10 l 10 15 l 12 10 l 16 12 l 12 3 l 8 3 l closepath }
-	
-	/k { newpath 8 3 m 5 9 l 9 9 l 9 11 l 7 11 l 7 13 l 9 13 l 9 15 l 11 15 l
-		11 13 l 13 13 l 13 11 l 11 11 l 11 9 l 15 9 l 12 3 l closepath }
-	
-	/. {}
+    
+    /b { newpath 14 3 m 12 10 l 10 12 3 -30 30 arc
+        10 12 l 10 12 3 80 210 arc 8 10 l 6 3 l closepath }
+    
+    /q { newpath 4 12 m 8 10 l 10 15 l 12 10 l 16 12 l 12 3 l 8 3 l closepath }
+    
+    /k { newpath 8 3 m 5 9 l 9 9 l 9 11 l 7 11 l 7 13 l 9 13 l 9 15 l 11 15 l
+        11 13 l 13 13 l 13 11 l 11 11 l 11 9 l 15 9 l 12 3 l closepath }
+    
+    /. {}
 >> def
 
 /_piece_Draw {
-	(/_piece_Draw) CS_PUT
-	
-	3 dict begin
+    (/_piece_Draw) CS_PUT
+    
+    3 dict begin
 
-		/x exch def
-		%x AssertTypeString
+        /x exch def
+        %x AssertTypeString
 
-		% lowercase letters mean white pieces, except '.' for empty
-		
-		/xLowS { x _p_DupLowerCase_p_ } def
-				
-		PiecesPathsDict xLowS get exec
-		
-		/isWhite { x (.) ne x _piece_IsWhite_b_ and } def
-		
-		gsave
-		isWhite {1.0}{0.0} ifelse setgray
-		fill
-		grestore
+        % lowercase letters mean white pieces, except '.' for empty
+        
+        /xLowS { x _p_DupLowerCase_p_ } def
+                
+        PiecesPathsDict xLowS get exec
+        
+        /isWhite { x (.) ne x _piece_IsWhite_b_ and } def
+        
+        gsave
+        isWhite {1.0}{0.0} ifelse setgray
+        fill
+        grestore
 
-		0 setgray	
-		stroke
+        0 setgray    
+        stroke
 
-	end
-	
-	CS_POP
+    end
+    
+    CS_POP
 } def
 
 /_pieces_DrawCapturedPieces {
-	(/_pieces_DrawCapturedPieces) CS_PUT
+    (/_pieces_DrawCapturedPieces) CS_PUT
 
-	3 dict begin
+    3 dict begin
 
-	/pieces exch def
+    /pieces exch def
 
     gsave
     0 1 pieces length 1 sub {
-    	/i exch def
-   	    /c pieces i 1 getinterval def
-   	    c (.) eq { exit } if
-   	    %c show
-   	    c _piece_Draw
-   	    12 0 translate
-   	    i 7 eq { 12 -8 mul -15 translate } if
+        /i exch def
+           /c pieces i 1 getinterval def
+           c (.) eq { exit } if
+           %c show
+           c _piece_Draw
+           12 0 translate
+           i 7 eq { 12 -8 mul -15 translate } if
     } for
     grestore
     
-	end
-	
+    end
+    
     CS_POP
 } def
 
 /_hR_hG_hB_piece_isHatched_DrawSquare {
-	(/_hR_hG_hB_piece_isHatched_DrawSquare) CS_PUT
+    (/_hR_hG_hB_piece_isHatched_DrawSquare) CS_PUT
 
-	10 dict begin
+    10 dict begin
 
-		/isHatchedSquare exch def
-		/p exch def
-		/hB exch def
-		/hG exch def
-		/hR exch def
-	
-		%isBlackSquare AssertTypeBool
-		%p AssertTypeString
-		
-		isHatchedSquare {0.7}{1.0} ifelse setgray
-		
-		hR null ne
-		hG null ne and
-		hB null ne and {
-			hR hG hB setrgbcolor		
-		} if
-		
-		gsave
-		0 0 SQUARE_SIZE SQUARE_SIZE rectfill
-		0.0 setgray	
-		0 0 SQUARE_SIZE SQUARE_SIZE rectstroke
-		grestore
-		
-		p _piece_Draw
-				
-	end
-	
-	CS_POP
+        /isHatchedSquare exch def
+        /p exch def
+        /hB exch def
+        /hG exch def
+        /hR exch def
+    
+        %isBlackSquare AssertTypeBool
+        %p AssertTypeString
+        
+        isHatchedSquare {0.7}{1.0} ifelse setgray
+        
+        hR null ne
+        hG null ne and
+        hB null ne and {
+            hR hG hB setrgbcolor        
+        } if
+        
+        gsave
+        0 0 SQUARE_SIZE SQUARE_SIZE rectfill
+        0.0 setgray    
+        0 0 SQUARE_SIZE SQUARE_SIZE rectstroke
+        grestore
+        
+        p _piece_Draw
+                
+    end
+    
+    CS_POP
 } def
 
 /_highlightIndices_board_DrawBoard {
-	(/_highlightIndices_board_DrawBoard) CS_PUT
-	
-	20 dict begin
-	
-		/b exch def
-		/hs exch def % indices to highlight
-				
-		%hs AssertTypeArray
-		hs length 64 ne { (-- ERROR: hs length:) ==only hs length == quit } if
-	
-		% iterate board, draw squares and pieces
-	
-		gsave
+    (/_highlightIndices_board_DrawBoard) CS_PUT
+    
+    20 dict begin
+    
+        /b exch def
+        /hs exch def % indices to highlight
+                
+        %hs AssertTypeArray
+        hs length 64 ne { (-- ERROR: hs length:) ==only hs length == quit } if
+    
+        % iterate board, draw squares and pieces
+    
+        gsave
 
-		% clear page, required with flushpage in ghostview
-		gsave
-		1 setgray
-		-20 -20 400 300 rectfill
-	    grestore
+        % clear page, required with flushpage in ghostview
+        gsave
+        1 setgray
+        -20 -20 400 300 rectfill
+        grestore
 
-		SQUARE_SIZE 0 mul SQUARE_SIZE 7 mul translate
-		0 0 moveto
-		
-		0 1 b length 1 sub {
-			/i exch def
-		
-			i 0 ne i 8 mod 0 eq and {
-				SQUARE_SIZE -8 mul SQUARE_SIZE -1 mul translate
-			} if
-			
-			/p { b i 1 getinterval } def
-		
-			/isBlackSquare { i 8 idiv i add 2 mod 0 ne } def
+        SQUARE_SIZE 0 mul SQUARE_SIZE 7 mul translate
+        0 0 moveto
+        
+        0 1 b length 1 sub {
+            /i exch def
+        
+            i 0 ne i 8 mod 0 eq and {
+                SQUARE_SIZE -8 mul SQUARE_SIZE -1 mul translate
+            } if
+            
+            /p { b i 1 getinterval } def
+        
+            /isBlackSquare { i 8 idiv i add 2 mod 0 ne } def
 
-			/hR null def
-			/hG null def
-			/hB null def
-			
-			% move type ALLOWED
-			hs i get 1 eq {
-				/hR 1 def
-				/hG 1 def
-				/hB 0 def
-			} if
-	
-			% move type NOT_ALLOWED
-			hs i get 2 eq {
-				/hR 1 def
-				/hG 0 def
-				/hB 0 def
-			} if
+            /hR null def
+            /hG null def
+            /hB null def
+            
+            % move type ALLOWED
+            hs i get 1 eq {
+                /hR 1 def
+                /hG 1 def
+                /hB 0 def
+            } if
+    
+            % move type NOT_ALLOWED
+            hs i get 2 eq {
+                /hR 1 def
+                /hG 0 def
+                /hB 0 def
+            } if
 
-			% move type FROM
-			hs i get 3 eq {
-				/hR 0 def
-				/hG 1 def
-				/hB 0 def
-			} if
+            % move type FROM
+            hs i get 3 eq {
+                /hR 0 def
+                /hG 1 def
+                /hB 0 def
+            } if
 
-			hR hG hB p isBlackSquare _hR_hG_hB_piece_isHatched_DrawSquare
+            hR hG hB p isBlackSquare _hR_hG_hB_piece_isHatched_DrawSquare
 
-			% show square numbers
-			%gsave
-			%/Courier findfont 7 scalefont setfont
-			%0 0 moveto
-			%i 2 string cvs show
-			%grestore
+            % show square numbers
+            %gsave
+            %/Courier findfont 7 scalefont setfont
+            %0 0 moveto
+            %i 2 string cvs show
+            %grestore
 
-			SQUARE_SIZE 0 translate		
-		} for
+            SQUARE_SIZE 0 translate        
+        } for
 
-		grestore
-		
-		% show coordinates
-		gsave
-		1 1 8 {
-			/i exch def
+        grestore
+        
+        % show coordinates
+        gsave
+        1 1 8 {
+            /i exch def
 
-			% row numbers
-			-13 i 1 sub SQUARE_SIZE mul 6 add moveto
-			i ( ) cvs show
-		
-			% col letters
-			i SQUARE_SIZE mul 14 sub -12 moveto
-			/n ( ) def
-			n 0 i 96 add put
-			n show
-		} for
-		grestore
-	
-	end
+            % row numbers
+            -13 i 1 sub SQUARE_SIZE mul 6 add moveto
+            i ( ) cvs show
+        
+            % col letters
+            i SQUARE_SIZE mul 14 sub -12 moveto
+            /n ( ) def
+            n 0 i 96 add put
+            n show
+        } for
+        grestore
+    
+    end
 
-	CS_POP
+    CS_POP
 } def
 
 /_highlights_DrawBoard {
-	(/_highlights_DrawBoard) CS_PUT
+    (/_highlights_DrawBoard) CS_PUT
 
-	5 dict begin
+    5 dict begin
 
-	/highlights exch def
+    /highlights exch def
 
     gsave
     20 20 translate
@@ -255,8 +255,8 @@
     0 -40 translate
     GameState (CAPTURED_BY_WHITE) get _pieces_DrawCapturedPieces
     grestore
-	
-	end
-	
-	CS_POP
+    
+    end
+    
+    CS_POP
 } def
