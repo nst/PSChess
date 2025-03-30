@@ -13,7 +13,7 @@
 
 (drawing.ps) run
 
-<< /PageSize [300 200] >> setpagedevice
+<< /PageSize [600 400] >> setpagedevice
 
 %200 400 translate
 
@@ -25,7 +25,7 @@ NewGame
 PrintBoardAndGameState
 
 gsave
-20 20 translate
+50 50 translate
 64 array GameState (BOARD) get _highlightIndices_board_DrawBoard
 grestore
 

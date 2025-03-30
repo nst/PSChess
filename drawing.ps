@@ -122,6 +122,8 @@
 /_highlightIndices_board_DrawBoard {
     (/_highlightIndices_board_DrawBoard) CS_PUT
     
+    2 2 scale
+    
     20 dict begin
     
         /b exch def
@@ -223,7 +225,7 @@
     /highlights exch def
 
     gsave
-    20 20 translate
+    50 50 translate
     
     highlights GameState (BOARD) get _highlightIndices_board_DrawBoard
   
