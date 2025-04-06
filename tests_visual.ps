@@ -3,6 +3,8 @@
 % https://github.com/nst/PSChess
 % https://seriot.ch/projects/pschess.html
 
+% gs -DNOSAFER tests_visual.ps
+
 (drawing.ps) run
 
 /RunVisualTests {
@@ -56,6 +58,6 @@ R...K..R\
     
 } def
 
-<< /PageSize [200 200] >> setpagedevice
+<< /PageSize [400 400] >> setpagedevice
 
 RunVisualTests
