@@ -10,35 +10,35 @@
 /AssertTypeName {
     1 dict begin
     /x exch def
-    x type /x type ne { (type error, expect nametype, got) x type == quit } if
+    x type /nametype ne { (type error, expect nametype, got) x type == quit } if
     end
 } bind def
 
 /AssertTypeBool {
     1 dict begin
     /x exch def
-    x type true type ne { (type error, expect boolean, got) x type == quit } if
+    x type /booleantype ne { (type error, expect boolean, got) x type == quit } if
     end
 } bind def
 
 /AssertTypeString {
     1 dict begin
     /x exch def
-    x type () type ne { (type error, expect string, got) == x type == quit } if
+    x type /stringtype ne { (type error, expect string, got) == x type == quit } if
     end
 } bind def
 
 /AssertTypeInt {
     1 dict begin
     /x exch def
-    x type 0 type ne { (type error, expect int, got) == x type == quit } if
+    x type /integertype ne { (type error, expect int, got) == x type == quit } if
     end
 } bind def
 
 /AssertTypeArray {
     1 dict begin
     /x exch def
-    x  type 0 array type ne { (type error, expect array, got) == x type == quit } if
+    x type /arraytype ne { (type error, expect array, got) == x type == quit } if
     end
 } bind def
 
