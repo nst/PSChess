@@ -54,7 +54,3 @@ Console output:
 
 - human plays white, computer plays black
 - pawns convert into queens only
-
-#### Known Bugs
-
-- 2025-07-10 king may disappear on castling

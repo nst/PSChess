@@ -564,11 +564,14 @@
         %----- castling
         
         % TODO: refactor..
+		
+		/JustCastled false def
         
         GameState (BLACK_DID_CASTLE) get not fromPiece (k) eq and fromCoord (e8) eq and toCoord (c8) eq and {
             brd (black) [2 3 4] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
                 brd  0 (..kr) putinterval
-                GameState (BLACK_DID_CASTLE) true put    
+                GameState (BLACK_DID_CASTLE) true put
+				/JustCastled true def
             } {
                 /canMove false def
                 /msg (ERR: black checked) def
@@ -580,6 +583,7 @@
             brd (black) [4 5 6] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
                 brd  4 (rk..) putinterval
                 GameState (BLACK_DID_CASTLE) true put
+				/JustCastled true def
             } {
                 /canMove false def
                 /msg (ERR: black checked) def
@@ -590,7 +594,8 @@
         GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (g1) eq and {
             brd (white) [60 61 62] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
                 brd 60 (.RK.) putinterval
-                GameState (BLACK_DID_CASTLE) true put
+                GameState (WHITE_DID_CASTLE) true put
+				/JustCastled true def
             } {
                 /canMove false def
                 /msg (ERR: white checked) def
@@ -601,7 +606,8 @@
         GameState (WHITE_DID_CASTLE) get not fromPiece (K) eq and fromCoord (e1) eq and toCoord (c1) eq and {
             brd (white) [58 59 60] _board_whiteOrBlack_indices_IndicesContainOneChecked_b_ not {
                 brd 56 (..KR) putinterval
-                GameState (BLACK_DID_CASTLE) true put
+                GameState (WHITE_DID_CASTLE) true put
+				/JustCastled true def
             } {
                 /canMove false def
                 /msg (ERR: white checked) def
@@ -611,10 +617,12 @@
 
         %----- actual move on actual board
         
-        /p GameState (BOARD) get fromCoord _board_coord_Piece_p_ def
-        brd toIndex p putinterval
-        brd fromIndex (.) putinterval
-
+		JustCastled not {
+	        /p GameState (BOARD) get fromCoord _board_coord_Piece_p_ def
+	        brd toIndex p putinterval
+	        brd fromIndex (.) putinterval
+		} if
+		
         %----- pawn promotion
         
         /toPiece brd toCoord _board_coord_Piece_p_ def
