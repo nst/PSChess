@@ -691,6 +691,47 @@ k.......\
     CS_POP
 } def
 
+/TestCastling {
+    (TestCastling) CS_PUT
+    
+    save
+    
+    NewGame
+    
+    /b1 (\
+........\
+....k...\
+........\
+........\
+........\
+........\
+........\
+....K..R\
+) _s_Dup_s_ def    
+    
+    b1 (e1) (g1) false _board_fc_tc_dry_Move_canMove_squaresStatus_msg_                        
+    /_canMove exch def
+    /_highlights exch def
+    /_msg exch def
+
+    /b2 (\
+........\
+....k...\
+........\
+........\
+........\
+........\
+........\
+.....RK.\
+) _s_Dup_s_ def
+    
+    (TEST TestCastling.1) { b1 } { b2 } _s_p1_p2_AssertArrayHaveEqualContents
+    
+    restore
+    
+    CS_POP
+} def
+
 /TestCheckCastling {
     (TestCheckCastling) CS_PUT
 
@@ -983,6 +1024,7 @@ r...q...\
     TestArrayReversed
     TestEval
     TestEnPassant
+    TestCastling
     TestCheckCastling
     TestCanMove
     TestCannotMove
